@@ -11,7 +11,6 @@
 namespace Rover\Params;
 
 use Bitrix\Iblock\ElementTable;
-
 use Bitrix\Iblock\IblockTable;
 use Bitrix\Iblock\TypeTable;
 use Bitrix\Iblock\PropertyTable;
@@ -29,29 +28,23 @@ class Iblock extends Core
 
 	/**
 	 * @param string $empty
-	 * @return array
+	 * @param array  $template
+	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @throws \Bitrix\Main\LoaderException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getTypes($empty = '-')
+	public static function getTypes($empty = '-', $template = ['{ID}' => '[{ID}] {NAME}'])
 	{
 		self::checkModule();
 
 		$query = [
 			'order'     => ['SORT' => 'ASC'],
-			'select'    => ['ID']
+			'filter'    => ['LANG_MESSAGE.LANGUAGE_ID' => LANGUAGE_ID],
+			'select'    => ['ID', 'NAME' => 'LANG_MESSAGE.NAME'],
 		];
 
-		$result         = ["" => $empty];
-		$iblockTypes    = TypeTable::getList($query);
-
-		while($iblockType = $iblockTypes->fetch())
-			if ($iblockTypeLang = \CIBlockType::GetByIDLang($iblockType["ID"], LANG))
-				$result[$iblockType["ID"]] = $iblockTypeLang["NAME"];
-
-		return $result;
+		return self::prepare(TypeTable::getList($query), $empty, $template);
 	}
 
 	/**
@@ -183,7 +176,13 @@ class Iblock extends Core
 		return $resultRaw;
 	}
 
-
+	/**
+	 * @param     $sectionId
+	 * @param     $sections
+	 * @param int $deep
+	 * @return array
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
 	protected static function getWithChild($sectionId, $sections, $deep = 0)
 	{
 		$result = [];
