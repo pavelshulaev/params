@@ -10,15 +10,16 @@
 
 namespace Rover\Params;
 
-use Bitrix\Iblock\ElementTable;
-use Bitrix\Iblock\IblockTable;
-use Bitrix\Iblock\TypeTable;
-use Bitrix\Iblock\PropertyTable;
 use Bitrix\Iblock\SectionTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\DB\Result;
 
-
+/**
+ * Class Iblock
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (http://rover-it.me)
+ */
 class Iblock extends Core
 {
 	/**
@@ -27,14 +28,13 @@ class Iblock extends Core
 	protected static $moduleName = 'iblock';
 
 	/**
-	 * @param string $empty
-	 * @param array  $template
+	 * @param array $params
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getTypes($empty = '-', $template = ['{ID}' => '[{ID}] {NAME}'])
+	public static function getTypes(array $params = [])
 	{
 		self::checkModule();
 
@@ -44,25 +44,28 @@ class Iblock extends Core
 			'select'    => ['ID', 'NAME' => 'LANG_MESSAGE.NAME'],
 		];
 
-		return self::prepare(TypeTable::getList($query), $empty, $template);
+		$params['class']    = '\Bitrix\Iblock\TypeTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
+
+		return self::prepare($params);
 	}
 
 	/**
-	 * @param        $type
-	 * @param null   $siteId
-	 * @param string $empty
-	 * @return array
+	 * @param      $type
+	 * @param null $siteId
+	 * @param      $params
+	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @throws \Bitrix\Main\LoaderException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getByType($type, $siteId = null, $empty = '-')
+	public static function getByType($type, $siteId = null, array $params = [])
 	{
 		self::checkModule();
 
 		if (!$type)
-			return self::prepareEmpty($empty);
+			return self::prepareEmpty($params);
 
 		$query = [
 			'filter'    => [
@@ -76,24 +79,29 @@ class Iblock extends Core
 		if ($siteId)
 			$query['filter']['=SITE_ID'] = $siteId;
 
-		return self::prepare(IblockTable::getList($query), $empty);
+		$params['class']    = '\Bitrix\Iblock\IblockTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
+
+		return self::prepare($params);
 	}
+
 
 	/**
 	 * @param           $iblockId
-	 * @param string    $empty
 	 * @param bool|true $withSubsections
-	 * @return array
+	 * @param           $params
+	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getSections($iblockId, $empty = '-', $withSubsections = true)
+	public static function getSections($iblockId, $withSubsections = true, array $params = [])
 	{
 		self::checkModule();
 
 		if (!(intval($iblockId)))
-			return self::prepareEmpty($empty);
+			return self::prepareEmpty($params);
 
 		$query = [
 			'filter' => [
@@ -107,45 +115,31 @@ class Iblock extends Core
 		if (!$withSubsections)
 			$query['filter']['IBLOCK_SECTION_ID'] = false;
 
-		$sections = SectionTable::getList($query);
+		$params['class']    = '\Bitrix\Iblock\SectionTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
 
-		// without hierarchy
-		if (!$withSubsections)
-			return self::prepare($sections, $empty);
+		// with hierarchy
+		if ($withSubsections){
 
-		$resultRaw  = self::addChildInfo($sections);
-		$resultSort = [];
-		// filter by hierarchy
-		foreach ($resultRaw as $section)
-		{
-			if (!empty($section['IBLOCK_SECTION_ID']))
-				continue;
+			$sections   = SectionTable::getList($query);
+			$resultRaw  = self::addChildInfo($sections);
+			$resultSort = [];
 
-			$resultSort = array_merge($resultSort,
-				self::getWithChild($section['ID'], $resultRaw));
-		}
+			// filter by hierarchy
+			foreach ($resultRaw as $section)
+			{
+				if (!empty($section['IBLOCK_SECTION_ID']))
+					continue;
 
-		$result = is_null($empty)
-			? []
-			: [0 => $empty];
-
-		$template   = '[{ID}] {NAME}';
-		$mask       = self::getMask($template);
-		$cacheKey   = Cache::getKey(serialize($resultSort) . $empty . serialize($mask));
-
-		if(false === (Cache::check($cacheKey))) {
-
-			foreach ($resultSort as $element){
-
-				$name = self::prepareName($element, $mask, $template);
-				$name = str_pad('', $element['DEEP'] * 2, '.') . $name;
-				$result[$element['ID']] = $name;
+				$resultSort = array_merge($resultSort,
+					self::getWithChild($section['ID'], $resultRaw));
 			}
 
-			Cache::set($cacheKey, $result);
+			$params['elements'] = $resultSort;
 		}
 
-		return Cache::get($cacheKey);
+		return self::prepare($params);
 	}
 
 	/**
@@ -161,7 +155,6 @@ class Iblock extends Core
 			$resultRaw[$section['ID']] = $section;
 
 		//add info about childs
-
 		foreach ($resultRaw as $sectionId => &$sectionRaw) {
 			if (empty($sectionRaw['IBLOCK_SECTION_ID']))
 				continue;
@@ -191,6 +184,9 @@ class Iblock extends Core
 			return $result;
 
 		$sections[$sectionId]['DEEP'] = $deep;
+		$sections[$sectionId]['NAME'] = str_pad('', $deep * 1, '.')
+			. $sections[$sectionId]['NAME'];
+
 		$result[] = $sections[$sectionId];
 
 		// if section has no childs
@@ -205,21 +201,20 @@ class Iblock extends Core
 	}
 
 	/**
-	 * @param        $iblockId
-	 * @param null   $sectionId
-	 * @param string $empty
-	 * @return array
+	 * @param      $iblockId
+	 * @param null $sectionId
+	 * @param      $params
+	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @throws \Bitrix\Main\LoaderException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getElements($iblockId, $sectionId = null, $empty = '-')
+	public static function getElements($iblockId, $sectionId = null, array $params = [])
 	{
 		self::checkModule();
 
 		if (!(int)$iblockId)
-			return self::prepareEmpty($empty);
+			return self::prepareEmpty($params);
 
 		$query = [
 			'filter'    => [
@@ -233,24 +228,28 @@ class Iblock extends Core
 		if (intval($sectionId))
 			$query['filter']['IBLOCK_SECTION_ID'] = intval($sectionId);
 
-		return self::prepare(ElementTable::getList($query), $empty);
+
+		$params['class']    = '\Bitrix\Iblock\ElementTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
+
+		return self::prepare($params);
 	}
 
 	/**
-	 * @param        $iblockId
-	 * @param string $empty
-	 * @param array  $template
+	 * @param $iblockId
+	 * @param $params
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getProps($iblockId, $empty = '-', $template = ['{ID}' => '[{CODE}] {NAME}'])
+	public static function getProps($iblockId, array $params = [])
 	{
 		self::checkModule();
 
 		if (!intval($iblockId))
-			return self::prepareEmpty($empty);
+			return self::prepareEmpty($params);
 
 		$query = [
 			'order' => ['ID' => 'ASC'],
@@ -261,6 +260,10 @@ class Iblock extends Core
 			'select' => ['ID', 'NAME', 'CODE']
 		];
 
-		return self::prepare(PropertyTable::getList($query), $empty, $template);
+		$params['class']    = '\Bitrix\Iblock\PropertyTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
+
+		return self::prepare($params);
 	}
 }

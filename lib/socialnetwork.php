@@ -11,20 +11,27 @@
 namespace Rover\Params;
 
 use Bitrix\Main\SystemException;
-use \Bitrix\Socialnetwork\WorkgroupTable;
 
+/**
+ * Class Socialnetwork
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (http://rover-it.me)
+ */
 class Socialnetwork extends Core
 {
+	/**
+	 * @var string
+	 */
 	protected static $moduleName = 'socialnetwork';
 
 	/**
-	 * @return array
+	 * @param array $params
+	 * @return array|null
 	 * @throws SystemException
-	 * @throws \Bitrix\Main\ArgumentException
-	 * @throws \Bitrix\Main\LoaderException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getWorkGroups()
+	public static function getWorkGroups(array $params = [])
 	{
 		self::checkModule();
 
@@ -33,12 +40,10 @@ class Socialnetwork extends Core
 			'select'    => ['ID', 'NAME']
 		];
 
-		$workGroups = WorkgroupTable::getList($query);
-		$result     = [];
+		$params['class']    = '\Bitrix\Socialnetwork\WorkgroupTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
 
-		while($workGroup = $workGroups->fetch())
-			$result[$workGroup['ID']] = $workGroup['NAME'] . ' [' . $workGroup['ID'] . ']';
-
-		return $result;
+		return self::prepare($params);
 	}
 }

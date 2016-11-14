@@ -10,33 +10,28 @@
 
 namespace Rover\Params;
 
-use \Bitrix\Main\GroupTable;
-
-class Main
+class Main extends Core
 {
 	/**
 	 * @param bool|false $hideAdmin
-	 * @return array
-	 * @throws \Bitrix\Main\ArgumentException
+	 * @param array      $params
+	 * @return array|null
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getSysGroups($hideAdmin = false)
+	public static function getSysGroups($hideAdmin = false, array $params = [])
 	{
 		$query = [
-			'order' => ['ID' => 'ASC'],
-			'select' => ['ID', 'NAME']
+			'order'     => ['ID' => 'ASC'],
+			'select'    => ['ID', 'NAME']
 		];
 
-		$sysGroups  = GroupTable::getList($query);
-		$result     = [];
+		if ($hideAdmin)
+			$query['filter'] = ['!ID' => 2];
 
-		while($sysGroup = $sysGroups->fetch()){
-			if ($hideAdmin && $sysGroup['ID'] == 2)
-				continue;
+		$params['class']    = '\Bitrix\Main\GroupTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
 
-			$result[$sysGroup['ID']] = $sysGroup['NAME'] . ' [' . $sysGroup['ID'] . ']';
-		}
-
-		return $result;
+		return self::prepare($params);
 	}
 }

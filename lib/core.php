@@ -10,12 +10,25 @@
 
 namespace Rover\Params;
 
+use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\Loader;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\DB\Result;
 
 class Core
 {
+	/**
+	 * @var array
+	 */
+	protected static $defaults = [
+		'query'     => [],
+		'empty'     => '-',
+		'template'  => ['{ID}' => '[{ID}] {NAME}'],
+		'class'     => '',
+		'method'    => '',
+		//'elements'  => []
+	];
+
 	/**
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\LoaderException
@@ -31,48 +44,99 @@ class Core
 	}
 
 	/**
-	 * @param Result|null $rcElements
-	 * @param null        $empty
-	 * @param array       $template
-	 * @return array|null
+	 * @param $params
+	 * @return mixed
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	protected static function prepare(Result $rcElements = null, $empty = null, array $template = ['{ID}' => '[{ID}] {NAME}'])
+	protected static function checkParams($params)
 	{
-		$result = is_null($empty)
-			? []
-			: [0 => $empty];
+		foreach (self::$defaults as $key => $default)
+			if (!isset($params[$key]))
+				$params[$key] = $default;
 
-		// check if empty result
-		if (is_null($rcElements))
-			return $result;
+		return $params;
+	}
 
-		$keyTemplate    = key($template);
-		$nameTemplate   = $template[$keyTemplate];
-
-		if (empty($keyTemplate) || empty($nameTemplate))
-			return $result;
-
-		// check cache
-		$cacheKey = Cache::getKey(serialize($rcElements) . $empty . serialize($template));
+	/**
+	 * @param array $params
+	 * @return array|null
+	 * @throws ArgumentOutOfRangeException
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	protected static function prepare(array $params = [])
+	{
+		$params     = self::checkParams($params);
+		$cacheKey   = Cache::getKey(serialize($params));
 
 		if(false === (Cache::check($cacheKey))) {
 
-			$nameMask   = self::getMask($nameTemplate);
-			$keyMask    = self::getMask($keyTemplate);
+			$empty  = $params['empty'];
+			$result = is_null($empty)
+				? []
+				: [0 => $empty];
 
-			while($element = $rcElements->fetch())
-			{
-				$key    = self::prepareName($element, $keyMask, $keyTemplate);
-				$name   = self::prepareName($element, $nameMask, $nameTemplate);
+			$class      = $params['class'];
+			$method     = $params['method'];
 
-				$result[$key] = $name;
+			if (!method_exists($class, $method))
+				return $result;
+
+
+			$template   = $params['template'];
+			$query      = $params['query'];
+
+			$keyTemplate    = key($template);
+			$nameTemplate   = $template[$keyTemplate];
+
+			if (empty($keyTemplate) || empty($nameTemplate))
+				return $result;
+
+			if (!isset($params['elements'])) {
+				/**
+				 * @var Result $rcElements
+				 */
+				$rcElements = $class::$method($query);
+
+				// check if empty result
+				if (is_null($rcElements))
+					return $result;
+
+				$elements = $rcElements->fetchAll();
+			} else {
+				$elements = $params['elements'];
 			}
+
+			$result = self::prepareResult($elements, $keyTemplate,
+				$nameTemplate, $result);
 
 			Cache::set($cacheKey, $result);
 		}
 
 		return Cache::get($cacheKey);
+	}
+
+	/**
+	 * @param array $elements
+	 * @param       $keyTemplate
+	 * @param       $nameTemplate
+	 * @param array $result
+	 * @return array
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	protected static function prepareResult(array $elements, $keyTemplate, $nameTemplate, array $result = [])
+	{
+		$nameMask   = self::getMask($nameTemplate);
+		$keyMask    = self::getMask($keyTemplate);
+
+		foreach ($elements as $element)
+		{
+			$key    = self::prepareName($element, $keyMask, $keyTemplate);
+			$name   = self::prepareName($element, $nameMask, $nameTemplate);
+
+			$result[$key] = $name;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -113,13 +177,15 @@ class Core
 	}
 
 	/**
-	 * @param string $empty
-	 * @return array
+	 * @param array $params
+	 * @return array|null
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	protected static function prepareEmpty($empty = null)
+	protected static function prepareEmpty(array $params = [])
 	{
-		return self::prepare(null, $empty);
+		$params['elements'] = [];
+
+		return self::prepare($params);
 	}
 
 
