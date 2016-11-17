@@ -14,24 +14,24 @@ class rover_params extends CModule
     public $MODULE_DESCRIPTION;
     public $MODULE_CSS;
 
-    protected $errors = [];
+    protected $errors = array();
 	
     function __construct()
     {
-		$arModuleVersion = [];
+		$arModuleVersion = array();
 
         require(__DIR__ . "/version.php");
 
 		if (is_array($arModuleVersion) && array_key_exists("VERSION", $arModuleVersion)) {
 			$this->MODULE_VERSION		= $arModuleVersion["VERSION"];
 			$this->MODULE_VERSION_DATE	= $arModuleVersion["VERSION_DATE"];
-			$this->MODULE_NAME			= Loc::getMessage('rover_params__name');
-			$this->MODULE_DESCRIPTION	= Loc::getMessage('rover_params__descr');
-	        $this->PARTNER_NAME         = Loc::getMessage('rover_params__partner_name');
-	        $this->PARTNER_URI          = Loc::getMessage('rover_params__partner_uri');
-        } else {
+        } else
             $this->errors[] = Loc::getMessage('rover_params__version_info_error');
-		}
+
+        $this->MODULE_NAME			= Loc::getMessage('rover_params__name');
+        $this->MODULE_DESCRIPTION	= Loc::getMessage('rover_params__descr');
+        $this->PARTNER_NAME         = GetMessage('rover_params__partner_name');
+        $this->PARTNER_URI          = GetMessage('rover_params__partner_uri');
 	}
 
     /**
@@ -65,12 +65,12 @@ class rover_params extends CModule
     function GetModuleRightsList()
     {
         return array(
-            "reference_id" => ["D", "R", "W"],
-            "reference" => [
+            "reference_id" => array("D", "R", "W"),
+            "reference" => array(
                 Loc::getMessage('rover_params__reference_deny'),
                 Loc::getMessage('rover_params__reference_read'),
                 Loc::getMessage('rover_params__reference_write')
-            ]
+            )
         );
     }
 
@@ -80,7 +80,11 @@ class rover_params extends CModule
 	 */
 	private function ProcessInstall()
     {
-        ModuleManager::registerModule($this->MODULE_ID);
+        if (PHP_VERSION_ID < 50400)
+            $this->errors[] = Loc::getMessage('rover_params__php_version_error');
+
+        if (empty($this->errors))
+            ModuleManager::registerModule($this->MODULE_ID);
 
         global $APPLICATION;
 	    $APPLICATION->IncludeAdminFile(Loc::getMessage("rover_params__install_title"), $_SERVER['DOCUMENT_ROOT'] . getLocalPath("modules/". $this->MODULE_ID ."/install/message.php"));

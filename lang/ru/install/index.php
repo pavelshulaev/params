@@ -12,3 +12,4 @@ $MESS ['rover_params__install_title']		= "Установка модуля \"Па
 $MESS ['rover_params__uninstall_title']		= "Удаление модуля \"Параметры\"";
 
 $MESS ['rover_params__version_info_error']	= "Не найдена информация о версии";
+$MESS ['rover_params__php_version_error']	= "Требуется php версии 5.4 и выше";
