@@ -1,3 +1,3 @@
-#`\Rover\Params\Socialnetwork` Списки параметров социальной сети
+#`\Rover\Params\Socialnetwork` РЎРїРёСЃРєРё РїР°СЂР°РјРµС‚СЂРѕРІ СЃРѕС†РёР°Р»СЊРЅРѕР№ СЃРµС‚Рё
 ##`public static function getWorkGroups(array $params = [])`
-Возвращает рабочие группы
+Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р±РѕС‡РёРµ РіСЂСѓРїРїС‹
