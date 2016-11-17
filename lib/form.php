@@ -25,7 +25,7 @@ class Form extends Core
 	 * @throws \Bitrix\Main\SystemException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getWebForms($params = [])
+	public static function getWebForms(array $params = [])
 	{
 		self::checkModule();
 

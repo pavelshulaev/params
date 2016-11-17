@@ -86,7 +86,6 @@ class Iblock extends Core
 		return self::prepare($params);
 	}
 
-
 	/**
 	 * @param           $iblockId
 	 * @param bool|true $withSubsections

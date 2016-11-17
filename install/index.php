@@ -7,17 +7,17 @@ Loc::LoadMessages(__FILE__);
 
 class rover_params extends CModule
 {
-    public $MODULE_ID	= "rover.params";
-    public $MODULE_VERSION;
-    public $MODULE_VERSION_DATE;
-    public $MODULE_NAME;
-    public $MODULE_DESCRIPTION;
-    public $MODULE_CSS;
-
-    protected $errors = array();
+    var $MODULE_ID	= "rover.params";
+    var $MODULE_VERSION;
+    var $MODULE_VERSION_DATE;
+    var $MODULE_NAME;
+    var $MODULE_DESCRIPTION;
+    var $MODULE_CSS;
 	
     function __construct()
     {
+        global $errors;
+
 		$arModuleVersion = array();
 
         require(__DIR__ . "/version.php");
@@ -26,7 +26,7 @@ class rover_params extends CModule
 			$this->MODULE_VERSION		= $arModuleVersion["VERSION"];
 			$this->MODULE_VERSION_DATE	= $arModuleVersion["VERSION_DATE"];
         } else
-            $this->errors[] = Loc::getMessage('rover_params__version_info_error');
+            $errors[] = Loc::getMessage('rover_params__version_info_error');
 
         $this->MODULE_NAME			= Loc::getMessage('rover_params__name');
         $this->MODULE_DESCRIPTION	= Loc::getMessage('rover_params__descr');
@@ -80,14 +80,16 @@ class rover_params extends CModule
 	 */
 	private function ProcessInstall()
     {
-        if (PHP_VERSION_ID < 50400)
-            $this->errors[] = Loc::getMessage('rover_params__php_version_error');
+        global $APPLICATION, $errors;
 
-        if (empty($this->errors))
+        if (PHP_VERSION_ID < 50400)
+            $errors[] = Loc::getMessage('rover_params__php_version_error');
+
+        if (empty($errors))
             ModuleManager::registerModule($this->MODULE_ID);
 
-        global $APPLICATION;
-	    $APPLICATION->IncludeAdminFile(Loc::getMessage("rover_params__install_title"), $_SERVER['DOCUMENT_ROOT'] . getLocalPath("modules/". $this->MODULE_ID ."/install/message.php"));
+	    $APPLICATION->IncludeAdminFile(Loc::getMessage("rover_params__install_title"),
+            $_SERVER['DOCUMENT_ROOT'] . getLocalPath("modules/". $this->MODULE_ID ."/install/message.php"));
     }
 
 	/**
@@ -99,6 +101,7 @@ class rover_params extends CModule
 	    ModuleManager::unRegisterModule($this->MODULE_ID);
 
         global $APPLICATION;
-        $APPLICATION->IncludeAdminFile(Loc::getMessage("rover_params__uninstall_title"), $_SERVER['DOCUMENT_ROOT'] . getLocalPath("modules/". $this->MODULE_ID ."/install/unMessage.php"));
+        $APPLICATION->IncludeAdminFile(Loc::getMessage("rover_params__uninstall_title"),
+            $_SERVER['DOCUMENT_ROOT'] . getLocalPath("modules/". $this->MODULE_ID ."/install/unMessage.php"));
 	}
 }
