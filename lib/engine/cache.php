@@ -8,7 +8,7 @@
  * @author Pavel Shulaev (http://rover-it.me)
  */
 
-namespace Rover\Params;
+namespace Rover\Params\Engine;
 
 class Cache
 {

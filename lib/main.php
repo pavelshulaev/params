@@ -10,6 +10,14 @@
 
 namespace Rover\Params;
 
+use Rover\Params\Engine\Core;
+
+/**
+ * Class Main
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (http://rover-it.me)
+ */
 class Main extends Core
 {
 	/**
@@ -31,6 +39,30 @@ class Main extends Core
 		$params['class']    = '\Bitrix\Main\GroupTable';
 		$params['method']   = 'getList';
 		$params['query']    = $query;
+
+		return self::prepare($params);
+	}
+
+	/**
+	 * @param string $lid
+	 * @param array  $params
+	 * @return array|null
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	public static function getEventTypes($lid = 'ru', array $params = [])
+	{
+		$query = [
+			'order'     => ['ID' => 'ASC'],
+			'filter'    => ['=LID' => $lid],
+			'select'    => ['ID', 'NAME', 'EVENT_NAME']
+		];
+
+		$params['class']    = '\Bitrix\Main\Mail\Internal\EventTypeTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
+
+		if (!isset($params['template']))
+			$params['template'] = ['{ID}' => '{NAME} [{EVENT_NAME}]'];
 
 		return self::prepare($params);
 	}
