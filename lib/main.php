@@ -20,6 +20,7 @@ use Rover\Params\Engine\Core;
  */
 class Main extends Core
 {
+	protected static $currentSiteId;
 	/**
 	 * @param bool|false $hideAdmin
 	 * @param array      $params
@@ -63,6 +64,28 @@ class Main extends Core
 
 		if (!isset($params['template']))
 			$params['template'] = ['{ID}' => '{NAME} [{EVENT_NAME}]'];
+
+		return self::prepare($params);
+	}
+
+	/**
+	 * @param $params
+	 * @return array|null
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	public static function getSites(array $params = [])
+	{
+		$query = [
+			'order'     => ['SORT' => 'desc'],
+			'select'    => ['LID', 'NAME']
+		];
+
+		$params['class']    = '\Bitrix\Main\SiteTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
+
+		if (!isset($params['template']))
+			$params['template'] = ['{LID}' => '[{LID}] {NAME}'];
 
 		return self::prepare($params);
 	}
