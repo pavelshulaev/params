@@ -26,6 +26,7 @@ class Core
 		'template'  => ['{ID}' => '[{ID}] {NAME}'],
 		'class'     => '',
 		'method'    => '',
+		'filter'    => [],
 		//'elements'  => []
 	];
 
@@ -48,10 +49,10 @@ class Core
 	 * @return mixed
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	protected static function checkParams($params)
+	protected static function checkParams(array $params = [])
 	{
 		foreach (self::$defaults as $key => $default)
-			if (!isset($params[$key]))
+			if (!array_key_exists($key, $params))
 				$params[$key] = $default;
 
 		return $params;
@@ -84,6 +85,9 @@ class Core
 
 			$template   = $params['template'];
 			$query      = $params['query'];
+
+			if (count($params['filter']))
+				$query['filter'] = array_replace($query['filter'], $params['filter']);
 
 			$keyTemplate    = key($template);
 			$nameTemplate   = $template[$keyTemplate];
