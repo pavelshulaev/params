@@ -48,4 +48,33 @@ class Form extends Core
 		return $result;
 	}
 
+	/**
+	 * @param       $formId
+	 * @param array $params
+	 * @return array
+	 * @throws \Bitrix\Main\SystemException
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	public static function getQuestions($formId, array $params = [])
+	{
+		self::checkModule();
+
+		$fields         = [];
+		$is_filtered    = null;
+
+		$rsQuestions = \CFormField::GetList(
+			$formId,
+			"ALL",
+			$by = "sort",
+			$order = "asc",
+			["ACTIVE" => "Y"],
+			$is_filtered
+		);
+
+		while ($arQ = $rsQuestions->Fetch())
+			$fields[$arQ['ID']]
+				= $arQ['TITLE'] . ' ('.$arQ['SID'].')';
+
+		return $fields;
+	}
 }
