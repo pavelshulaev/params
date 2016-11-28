@@ -7,3 +7,6 @@
 ###`public static function getEventTypes($lid = 'ru', array $params = [])`
 Возвращает типы почтовых событий
 * `$lid` - фильтр по языку
+
+###`public static function getSites(array $params = [])`
+Возвращает список существующих сайтов.

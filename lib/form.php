@@ -50,12 +50,11 @@ class Form extends Core
 
 	/**
 	 * @param       $formId
-	 * @param array $params
 	 * @return array
 	 * @throws \Bitrix\Main\SystemException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getQuestions($formId, array $params = [])
+	public static function getQuestions($formId)
 	{
 		self::checkModule();
 
