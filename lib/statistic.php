@@ -41,9 +41,20 @@ class Statistic extends Core
 		$companies  = \CAdv::GetSimpleList($by = "s_referer1", $order = "desc", $filter, $is_filtered);
 		$result     = [];
 
-		while ($company = $companies->Fetch())
-			$result[$company['ID']] = $company['DESCRIPTION']
-				. ' (referer1=' . $company['REFERER1'] . ', referer2=' . $company['REFERER2'] . ')';
+		while ($company = $companies->Fetch()){
+
+			$name = '[referer1="' . $company['REFERER1'] . '"';
+
+			if (strlen($company['REFERER2']))
+				$name .= ', referer2="' . $company['REFERER2'] . '"';
+
+			$name .= ']';
+
+			if (strlen($company['DESCRIPTION']))
+				$name .= ' ' . $company['DESCRIPTION'];
+
+			$result[$company['ID']] = $name;
+		}
 
 		return $result;
 	}
