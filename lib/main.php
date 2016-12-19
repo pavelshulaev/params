@@ -20,7 +20,11 @@ use Rover\Params\Engine\Core;
  */
 class Main extends Core
 {
+	/**
+	 * @var
+	 */
 	protected static $currentSiteId;
+
 	/**
 	 * @param bool|false $hideAdmin
 	 * @param array      $params
