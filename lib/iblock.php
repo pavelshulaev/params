@@ -95,7 +95,7 @@ class Iblock extends Core
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getSections($iblockId, $withSubsections = true, array $params = [])
+	public static function getSections($iblockId, $iblockSectionId = false, array $params = [])
 	{
 		self::checkModule();
 
@@ -111,8 +111,8 @@ class Iblock extends Core
 			'select'    => ['ID', 'NAME', 'IBLOCK_SECTION_ID']
 		];
 
-		if (!$withSubsections)
-			$query['filter']['IBLOCK_SECTION_ID'] = false;
+		if (!is_null($iblockSectionId))
+			$query['filter']['IBLOCK_SECTION_ID'] = $iblockSectionId;
 
 		$params['class']    = '\Bitrix\Iblock\SectionTable';
 		$params['method']   = 'getList';
