@@ -39,8 +39,8 @@ class Iblock extends Core
 		self::checkModule();
 
 		$query = [
+			'filter'    => ['=LANG_MESSAGE.LANGUAGE_ID' => LANGUAGE_ID],
 			'order'     => ['SORT' => 'ASC'],
-			'filter'    => ['LANG_MESSAGE.LANGUAGE_ID' => LANGUAGE_ID],
 			'select'    => ['ID', 'NAME' => 'LANG_MESSAGE.NAME'],
 		];
 
@@ -87,9 +87,9 @@ class Iblock extends Core
 	}
 
 	/**
-	 * @param           $iblockId
-	 * @param bool|true $withSubsections
-	 * @param           $params
+	 * @param            $iblockId
+	 * @param bool|false $iblockSectionId
+	 * @param array      $params
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
@@ -119,7 +119,7 @@ class Iblock extends Core
 		$params['query']    = $query;
 
 		// with hierarchy
-		if ($withSubsections){
+		if (is_null($iblockSectionId)){
 
 			$sections   = SectionTable::getList($query);
 			$resultRaw  = self::addChildInfo($sections);
