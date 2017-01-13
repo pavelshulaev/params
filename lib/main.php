@@ -93,4 +93,26 @@ class Main extends Core
 
 		return self::prepare($params);
 	}
+
+	/**
+	 * @param array $params
+	 * @return array|null
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	public static function getUsers(array $params = [])
+	{
+		$query = [
+			'order'     => ['ID' => 'ASC'],
+			'select'    => ['ID', 'NAME', 'LAST_NAME', 'LOGIN']
+		];
+
+		$params['class']    = '\Bitrix\Main\UserTable';
+		$params['method']   = 'getList';
+		$params['query']    = $query;
+
+		if (!isset($params['template']))
+			$params['template'] = ['{ID}' => '{NAME} {LAST_NAME} ({LOGIN})'];
+
+		return self::prepare($params);
+	}
 }
