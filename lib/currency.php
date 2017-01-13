@@ -18,23 +18,32 @@ use Rover\Params\Engine\Core;
  * @package Rover\Params
  * @author  Pavel Shulaev (http://rover-it.me)
  */
-class HighloadBlock extends Core
+class Currency extends Core
 {
 	/**
 	 * @var
 	 */
-	protected static $moduleName = 'highloadblock';
+	protected static $moduleName = 'currency';
 
 	/**
 	 * @param array $params
 	 * @return array|null
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getBlocks(array $params = [])
+	public static function getCurrencies(array $params = [])
 	{
 		self::checkModule();
 
-		$params['class']    = '\Bitrix\Highloadblock\HighloadBlockTable';
+		if (!isset($params['select']))
+			$params['select'] = ['CURRENCY', 'NAME' => 'LANG_FORMAT.FULL_NAME'];
+
+		if (!isset($params['template']))
+			$params['template'] = ['{CURRENCY}' => '[{CURRENCY}] {NAME}'];
+
+		if (!isset($params['filter']))
+			$params['filter'] = ['=LANG_FORMAT.LID' => LANGUAGE_ID];
+
+		$params['class']    = '\Bitrix\Currency\CurrencyTable';
 		$params['method']   = 'getList';
 
 		return self::prepare($params);

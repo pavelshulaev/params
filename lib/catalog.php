@@ -34,14 +34,8 @@ class Catalog extends Core
 	{
 		self::checkModule();
 
-		$query = [
-			'order'     => ['ID' => 'ASC'],
-			'select'    => ['ID', 'NAME']
-		];
-
 		$params['class']    = '\Bitrix\Catalog\GroupTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
 
 		return self::prepare($params);
 	}

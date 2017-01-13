@@ -35,14 +35,8 @@ class Socialnetwork extends Core
 	{
 		self::checkModule();
 
-		$query = [
-			'order'     => ['ID' => 'ASC'],
-			'select'    => ['ID', 'NAME']
-		];
-
 		$params['class']    = '\Bitrix\Socialnetwork\WorkgroupTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
 
 		return self::prepare($params);
 	}
