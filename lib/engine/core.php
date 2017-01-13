@@ -21,12 +21,11 @@ class Core
 	 * @var array
 	 */
 	protected static $defaults = [
-		'query'     => [],
 		'empty'     => '-',
 		'template'  => ['{ID}' => '[{ID}] {NAME}'],
 		'class'     => '',
 		'method'    => '',
-		'filter'    => [],
+		'add_filter'    => [],
 		'order'     => ['SORT' => 'ASC']
 		//'elements'  => []
 	];

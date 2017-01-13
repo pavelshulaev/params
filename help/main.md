@@ -10,3 +10,6 @@
 
 ###`public static function getSites(array $params = [])`
 Возвращает список существующих сайтов.
+
+###`public static function getUsers(array $params = [])`
+Возвращает список пользователей.
