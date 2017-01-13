@@ -39,7 +39,7 @@ class Main extends Core
 		];
 
 		if ($hideAdmin)
-			$query['filter'] = ['!ID' => 2];
+			$query['filter'] = ['!ID' => 1];
 
 		$params['class']    = '\Bitrix\Main\GroupTable';
 		$params['method']   = 'getList';
