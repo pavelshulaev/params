@@ -38,15 +38,14 @@ class Iblock extends Core
 	{
 		self::checkModule();
 
-		$query = [
-			'filter'    => ['=LANG_MESSAGE.LANGUAGE_ID' => LANGUAGE_ID],
-			'order'     => ['SORT' => 'ASC'],
-			'select'    => ['ID', 'NAME' => 'LANG_MESSAGE.NAME'],
-		];
-
 		$params['class']    = '\Bitrix\Iblock\TypeTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
+
+		if (!isset($params['filter']))
+			$params['filter'] = ['=LANG_MESSAGE.LANGUAGE_ID' => LANGUAGE_ID];
+
+		if (!isset($params['select']))
+			$params['select'] = ['ID', 'NAME' => 'LANG_MESSAGE.NAME'];
 
 		return self::prepare($params);
 	}
@@ -67,21 +66,20 @@ class Iblock extends Core
 		if (!$type)
 			return self::prepareEmpty($params);
 
-		$query = [
-			'filter'    => [
+		if (!isset($params['filter'])) {
+
+			$filter = [
 				"=IBLOCK_TYPE_ID"   => $type,
 				'=ACTIVE'           => 'Y'
-			],
-			'order'     => ['SORT' => 'ASC'],
-			'select'    => ['ID', 'NAME']
-		];
+			];
 
-		if ($siteId)
-			$query['filter']['=SITE_ID'] = $siteId;
+			if ($siteId)
+				$filter['=SITE_ID'] = $siteId;
+			$params['filter']   = $filter;
+		}
 
 		$params['class']    = '\Bitrix\Iblock\IblockTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
 
 		return self::prepare($params);
 	}
@@ -102,24 +100,34 @@ class Iblock extends Core
 		if (!(intval($iblockId)))
 			return self::prepareEmpty($params);
 
-		$query = [
-			'filter' => [
-				'=IBLOCK_ID'    => $iblockId,
-				'=ACTIVE'       => 'Y'
-			],
-			'order'     => ['SORT' => 'ASC'],
-			'select'    => ['ID', 'NAME', 'IBLOCK_SECTION_ID']
-		];
 
-		if (!is_null($iblockSectionId))
-			$query['filter']['IBLOCK_SECTION_ID'] = $iblockSectionId;
 
 		$params['class']    = '\Bitrix\Iblock\SectionTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
+
+		if (!isset($params['filter'])) {
+			$filter = [
+				'=IBLOCK_ID'    => $iblockId,
+				'=ACTIVE'       => 'Y'
+			];
+
+			if (!is_null($iblockSectionId))
+				$filter['=IBLOCK_SECTION_ID'] = $iblockSectionId;
+
+			$params['filter']    = $filter;
+		}
+
+		if (!isset($params['select']))
+			$params['select'] = ['ID', 'NAME', 'IBLOCK_SECTION_ID'];
 
 		// with hierarchy
 		if (is_null($iblockSectionId)){
+
+			$query = [
+				'filter' => $params['filter'],
+				'order'  => ['ID' => 'ASC'],
+				'select' => $params['select']
+			];
 
 			$sections   = SectionTable::getList($query);
 			$resultRaw  = self::addChildInfo($sections);
@@ -215,22 +223,20 @@ class Iblock extends Core
 		if (!(int)$iblockId)
 			return self::prepareEmpty($params);
 
-		$query = [
-			'filter'    => [
-				'=IBLOCK_ID'    => $iblockId,
-				'=ACTIVE'       => 'Y'
-			],
-			'order'     => ['SORT' => 'ASC'],
-			'select'    => ['ID', 'NAME']
-		];
-
-		if (intval($sectionId))
-			$query['filter']['IBLOCK_SECTION_ID'] = intval($sectionId);
-
-
 		$params['class']    = '\Bitrix\Iblock\ElementTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
+
+		if (!isset($params['filter'])) {
+			$filter = [
+				'=IBLOCK_ID'    => $iblockId,
+				'=ACTIVE'       => 'Y'
+			];
+
+			if (intval($sectionId))
+				$filter['=IBLOCK_SECTION_ID'] = intval($sectionId);
+
+			$params['filter']   = $filter;
+		}
 
 		return self::prepare($params);
 	}
@@ -250,18 +256,14 @@ class Iblock extends Core
 		if (!intval($iblockId))
 			return self::prepareEmpty($params);
 
-		$query = [
-			'order' => ['ID' => 'ASC'],
-			'filter' => [
-				'=IBLOCK_ID'    => $iblockId,
-				'=ACTIVE'       => 'Y'
-			],
-			'select' => ['ID', 'NAME', 'CODE']
-		];
-
 		$params['class']    = '\Bitrix\Iblock\PropertyTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
+
+		if (!isset($params['filter']))
+			$params['filter']   = [
+				'=IBLOCK_ID'    => $iblockId,
+				'=ACTIVE'       => 'Y',
+			];
 
 		return self::prepare($params);
 	}

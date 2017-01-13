@@ -37,15 +37,17 @@ class Sale extends Core
 
 		$lid = $params['LID'] ?: LANGUAGE_ID;
 
-		$query = [
-			'order'     => ['STATUS.SORT' => 'ASC'],
-			'select'    => ['ID' => 'STATUS_ID', 'NAME'],
-			'filter'    => ['=LID' => $lid]
-		];
-
 		$params['class']    = 'Bitrix\Sale\Internals\StatusLangTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
+
+		if (!isset($params['filter']))
+			$params['filter'] = ['=LID' => $lid];
+
+		if (!isset($params['order']))
+			$params['order'] = ['STATUS.SORT' => 'ASC'];
+
+		if (!isset($params['select']))
+			$params['select'] = ['ID' => 'STATUS_ID', 'NAME'];
 
 		return self::prepare($params);
 	}

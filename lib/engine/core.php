@@ -27,6 +27,7 @@ class Core
 		'class'     => '',
 		'method'    => '',
 		'filter'    => [],
+		'order'     => ['SORT' => 'ASC']
 		//'elements'  => []
 	];
 
@@ -83,20 +84,31 @@ class Core
 			if (!method_exists($class, $method))
 				return $result;
 
-
-			$template   = $params['template'];
-			$query      = $params['query'];
-
-			if (count($params['filter']))
-				$query['filter'] = array_replace($query['filter'], $params['filter']);
+			$template = $params['template'];
 
 			$keyTemplate    = key($template);
 			$nameTemplate   = $template[$keyTemplate];
 
-			if (empty($keyTemplate) || empty($nameTemplate))
+			if (empty($nameTemplate))
 				return $result;
 
+			if (empty($keyTemplate))
+				$keyTemplate = $nameTemplate;
+
+			$params['template'] = [$keyTemplate => $nameTemplate];
+
+			if (!isset($params['select']))
+				$params['select'] = self::getSelectFromTemplate($params['template']);
+
+			if (isset($params['add_filter']))
+				$params['filter'] = array_replace($params['filter'], $params['add_filter']);
+
 			if (!isset($params['elements'])) {
+				$query = [
+					'filter'    => $params['filter'],
+					'select'    => $params['select'],
+					'order'     => $params['order']
+				];
 				/**
 				 * @var Result $rcElements
 				 */
@@ -118,6 +130,34 @@ class Core
 		}
 
 		return Cache::get($cacheKey);
+	}
+
+	/**
+	 * @param $template
+	 * @return array
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	protected function getSelectFromTemplate($template)
+	{
+		$keyTemplate    = key($template);
+		$nameTemplate   = $template[$keyTemplate];
+
+		return array_unique(array_merge(self::getFieldsNames($keyTemplate),
+			self::getFieldsNames($nameTemplate)));
+	}
+
+	/**
+	 * @param $string
+	 * @return array
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	protected function getFieldsNames($string)
+	{
+		preg_match_all('/{([^}]+)}/usi', $string, $matches);
+
+		return isset($matches[1])
+			? $matches[1]
+			: [];
 	}
 
 	/**

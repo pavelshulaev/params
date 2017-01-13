@@ -33,17 +33,14 @@ class Main extends Core
 	 */
 	public static function getSysGroups($hideAdmin = false, array $params = [])
 	{
-		$query = [
-			'order'     => ['ID' => 'ASC'],
-			'select'    => ['ID', 'NAME']
-		];
-
-		if ($hideAdmin)
-			$query['filter'] = ['!ID' => 2];
-
 		$params['class']    = '\Bitrix\Main\GroupTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
+
+		if (!isset($params['filter']) && $hideAdmin)
+			$params['filter'] = ['!ID' => 2];
+
+		if (!isset($params['order']))
+			$params['order'] = ['ID' => 'ASC'];
 
 		return self::prepare($params);
 	}
@@ -56,15 +53,11 @@ class Main extends Core
 	 */
 	public static function getEventTypes($lid = 'ru', array $params = [])
 	{
-		$query = [
-			'order'     => ['ID' => 'ASC'],
-			'filter'    => ['=LID' => $lid],
-			'select'    => ['ID', 'NAME', 'EVENT_NAME']
-		];
-
 		$params['class']    = '\Bitrix\Main\Mail\Internal\EventTypeTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
+
+		if (!isset($params['filter']))
+			$params['filter'] = ['=LID' => $lid];
 
 		if (!isset($params['template']))
 			$params['template'] = ['{ID}' => '{NAME} [{EVENT_NAME}]'];
@@ -79,14 +72,8 @@ class Main extends Core
 	 */
 	public static function getSites(array $params = [])
 	{
-		$query = [
-			'order'     => ['SORT' => 'desc'],
-			'select'    => ['LID', 'NAME']
-		];
-
 		$params['class']    = '\Bitrix\Main\SiteTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
 
 		if (!isset($params['template']))
 			$params['template'] = ['{LID}' => '[{LID}] {NAME}'];
@@ -101,14 +88,8 @@ class Main extends Core
 	 */
 	public static function getUsers(array $params = [])
 	{
-		$query = [
-			'order'     => ['ID' => 'ASC'],
-			'select'    => ['ID', 'NAME', 'LAST_NAME', 'LOGIN']
-		];
-
 		$params['class']    = '\Bitrix\Main\UserTable';
 		$params['method']   = 'getList';
-		$params['query']    = $query;
 
 		if (!isset($params['template']))
 			$params['template'] = ['{ID}' => '{NAME} {LAST_NAME} ({LOGIN})'];
