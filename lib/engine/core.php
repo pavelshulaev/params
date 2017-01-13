@@ -103,6 +103,10 @@ class Core
 				$params['filter'] = array_replace($params['filter'], $params['add_filter']);
 
 			if (!isset($params['elements'])) {
+
+				if (!is_array($params['filter']))
+					$params['filter'] = [$params['filter']];
+
 				$query = [
 					'filter'    => $params['filter'],
 					'select'    => $params['select'],
