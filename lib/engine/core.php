@@ -138,7 +138,7 @@ class Core
 	 * @return array
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	protected function getSelectFromTemplate($template)
+	public function getSelectFromTemplate($template)
 	{
 		$keyTemplate    = key($template);
 		$nameTemplate   = $template[$keyTemplate];

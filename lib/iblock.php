@@ -100,8 +100,6 @@ class Iblock extends Core
 		if (!(intval($iblockId)))
 			return self::prepareEmpty($params);
 
-
-
 		$params['class']    = '\Bitrix\Iblock\SectionTable';
 		$params['method']   = 'getList';
 
@@ -118,7 +116,7 @@ class Iblock extends Core
 		}
 
 		if (!isset($params['select']))
-			$params['select'] = ['ID', 'NAME', 'IBLOCK_SECTION_ID'];
+			$params['select'] = self::getSelectFromTemplate($params['template']);
 
 		// with hierarchy
 		if (is_null($iblockSectionId)){
