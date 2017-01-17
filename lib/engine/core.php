@@ -25,7 +25,8 @@ class Core
 		'template'  => ['{ID}' => '[{ID}] {NAME}'],
 		'class'     => '',
 		'method'    => '',
-		'add_filter'    => [],
+		'filter'    => [],
+		'add_filter'=> [],
 		'order'     => ['SORT' => 'ASC']
 		//'elements'  => []
 	];
@@ -83,7 +84,7 @@ class Core
 			if (!method_exists($class, $method))
 				return $result;
 
-			$template = $params['template'];
+			$template       = $params['template'];
 
 			$keyTemplate    = key($template);
 			$nameTemplate   = $template[$keyTemplate];
@@ -103,9 +104,6 @@ class Core
 				$params['filter'] = array_replace($params['filter'], $params['add_filter']);
 
 			if (!isset($params['elements'])) {
-
-				if (!is_array($params['filter']))
-					$params['filter'] = [$params['filter']];
 
 				$query = [
 					'filter'    => $params['filter'],

@@ -28,8 +28,19 @@ class Workflow extends Core
 		self::checkModule();
 
 		if (is_null(self::$statuses) || (isset($params['reload']) && $params['reload'])) {
-			$rsWFStatus = \CWorkflowStatus::GetList($by = "c_sort", $order = "asc", ["ACTIVE" => "Y"], $is_filtered);
+
 			self::$statuses = [];
+
+			if (array_key_exists('empty', $params) && $params['empty'] !== null)
+			{
+				if (!$params['empty'])
+					$params['empty'] = '-';
+
+				self::$statuses[0] = $params['empty'];
+			}
+
+			$rsWFStatus = \CWorkflowStatus::GetList($by = "c_sort", $order = "asc", ["ACTIVE" => "Y"], $is_filtered);
+
 
 			while ($arWFS = $rsWFStatus->Fetch())
 				self::$statuses[$arWFS["ID"]] = $arWFS["TITLE"];
