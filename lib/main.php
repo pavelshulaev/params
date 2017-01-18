@@ -37,7 +37,7 @@ class Main extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter']) && $hideAdmin)
-			$params['filter'] = ['!ID' => 2];
+			$params['filter'] = ['!ID' => 1];
 
 		if (!isset($params['order']))
 			$params['order'] = ['ID' => 'ASC'];
