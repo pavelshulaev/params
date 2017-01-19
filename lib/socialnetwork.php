@@ -38,6 +38,9 @@ class Socialnetwork extends Core
 		$params['class']    = '\Bitrix\Socialnetwork\WorkgroupTable';
 		$params['method']   = 'getList';
 
+		if (!isset($params['order']))
+			$params['order'] = ['ID' => 'asc'];
+
 		return self::prepare($params);
 	}
 }
