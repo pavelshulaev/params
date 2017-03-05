@@ -50,11 +50,33 @@ class Core
 	 * @return mixed
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	protected static function checkParams(array $params = [])
+	protected static function prepareParams(array $params = [])
 	{
+		// set default if empty
 		foreach (self::$defaults as $key => $default)
 			if (!array_key_exists($key, $params))
 				$params[$key] = $default;
+
+		// fix template
+		$template       = $params['template'];
+
+		$keyTemplate    = key($template);
+		$nameTemplate   = $template[$keyTemplate];
+
+		if (empty($nameTemplate))
+			$params['template'] = [$keyTemplate => $keyTemplate];
+		elseif (empty($keyTemplate))
+			$params['template'] = [$nameTemplate => $nameTemplate];
+
+		// fix select
+		if (!isset($params['select']))
+			$params['select'] = self::getSelectFromTemplate($params['template']);
+
+		// add_filter
+		if (isset($params['add_filter']))
+			$params['filter'] = array_replace($params['filter'], $params['add_filter']);
+
+		unset($params['add_filter']);
 
 		return $params;
 	}
@@ -67,7 +89,7 @@ class Core
 	 */
 	protected static function prepare(array $params = [])
 	{
-		$params     = self::checkParams($params);
+		$params     = self::prepareParams($params);
 		$cacheKey   = Cache::getKey(serialize($params));
 		$reload     = isset($params['reload']) && $params['reload'];
 
@@ -78,54 +100,29 @@ class Core
 				? []
 				: [0 => $empty];
 
-			$class      = $params['class'];
-			$method     = $params['method'];
+			$class  = $params['class'];
+			$method = $params['method'];
 
 			if (!method_exists($class, $method))
 				return $result;
 
-			$template       = $params['template'];
+			$query = [
+				'filter'    => $params['filter'],
+				'select'    => $params['select'],
+				'order'     => $params['order']
+			];
+			/**
+			 * @var Result $rcElements
+			 */
+			$rcElements = $class::$method($query);
 
-			$keyTemplate    = key($template);
-			$nameTemplate   = $template[$keyTemplate];
-
-			if (empty($nameTemplate))
+			// check if empty result
+			if (!$rcElements->getSelectedRowsCount())
 				return $result;
 
-			if (empty($keyTemplate))
-				$keyTemplate = $nameTemplate;
-
-			$params['template'] = [$keyTemplate => $nameTemplate];
-
-			if (!isset($params['select']))
-				$params['select'] = self::getSelectFromTemplate($params['template']);
-
-			if (isset($params['add_filter']))
-				$params['filter'] = array_replace($params['filter'], $params['add_filter']);
-
-			if (!isset($params['elements'])) {
-
-				$query = [
-					'filter'    => $params['filter'],
-					'select'    => $params['select'],
-					'order'     => $params['order']
-				];
-				/**
-				 * @var Result $rcElements
-				 */
-				$rcElements = $class::$method($query);
-
-				// check if empty result
-				if (is_null($rcElements))
-					return $result;
-
-				$elements = $rcElements->fetchAll();
-			} else {
-				$elements = $params['elements'];
-			}
-
-			$result = self::prepareResult($elements, $keyTemplate,
-				$nameTemplate, $result);
+			$elements   = $rcElements->fetchAll();
+			$result     = self::prepareResult($elements, key($params['template']),
+				$params['template'][key($params['template'])], $result);
 
 			Cache::set($cacheKey, $result);
 		}
