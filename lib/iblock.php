@@ -85,7 +85,6 @@ class Iblock extends Core
 		return self::prepare($params);
 	}
 
-
 	/**
 	 * @param           $iblockId
 	 * @param bool|true $withSubsections
@@ -114,6 +113,9 @@ class Iblock extends Core
 
 		if (!$withSubsections)
 			return self::prepare($params);
+
+		if (!isset($params['template']))
+			$params['template'] = ['{ID}' => '{NAME} [{ID}]'];
 
 		$params = self::prepareParams($params);
 
