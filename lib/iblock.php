@@ -122,7 +122,7 @@ class Iblock extends Core
 		$params['select'] = array_merge(['ID', 'LEFT_MARGIN', 'RIGHT_MARGIN', 'DEPTH_LEVEL'],
 			$params['select']);
 
-		$cacheKey   = Cache::getKey(serialize($params));
+		$cacheKey = Cache::getKey(serialize($params));
 
 		if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
@@ -146,6 +146,7 @@ class Iblock extends Core
 
 				$subQuery = [
 					'filter' => [
+						'IBLOCK_ID'     => $iblockId,
 						'>LEFT_MARGIN'  => $parentSection['LEFT_MARGIN'],
 						'<RIGHT_MARGIN' => $parentSection['RIGHT_MARGIN'],
 					],
