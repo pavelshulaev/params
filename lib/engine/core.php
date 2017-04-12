@@ -93,7 +93,7 @@ class Core
 		$cacheKey   = Cache::getKey(serialize($params));
 		$reload     = isset($params['reload']) && $params['reload'];
 
-		if((false === (Cache::check($cacheKey))) || $reload) {
+		if((false === (Cache::check($cacheKey))) || $reload)  {
 
 			$empty  = $params['empty'];
 			$result = is_null($empty)
