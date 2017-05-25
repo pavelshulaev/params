@@ -10,6 +10,7 @@
 
 namespace Rover\Params;
 
+use Bitrix\Main\ArgumentNullException;
 use Rover\Params\Engine\Core;
 
 /**
@@ -46,6 +47,28 @@ class Main extends Core
 	}
 
 	/**
+	 * @param            $userId
+	 * @param bool|false $hideAdmin
+	 * @param array      $params
+	 * @return array|null
+	 * @throws ArgumentNullException
+	 * @author Pavel Shulaev (http://rover-it.me)
+	 */
+	public static function getUserSysGroups($userId, $hideAdmin = false, array $params = [])
+	{
+		$userId = intval($userId);
+		if (!$userId)
+			throw new ArgumentNullException('userId');
+
+		if (!isset($params['add_filter']))
+			$params['add_filter'] = [];
+
+		$params['add_filter']['=ID'] = \CUser::GetUserGroup($userId);
+
+		return self::getSysGroups($hideAdmin, $params);
+	}
+
+	/**
 	 * @param string $lid
 	 * @param array  $params
 	 * @return array|null
@@ -63,6 +86,37 @@ class Main extends Core
 			$params['template'] = ['{ID}' => '{NAME} [{EVENT_NAME}]'];
 
 		return self::prepare($params);
+	}
+
+    /**
+     * @param null   $eventName
+     * @param string $siteId
+     * @param array  $params
+     * @return array|null
+     * @author Pavel Shulaev (http://rover-it.me)
+     */
+	public static function getEventMessages($siteId = '', $eventName = null, array $params = [])
+	{
+        $params['class']    = '\Bitrix\Main\Mail\Internal\EventMessageTable';
+        $params['method']   = 'getList';
+
+        if (!isset($params['filter']))
+            $params['filter'] = [];
+
+        if (!empty($eventName))
+            $params['filter']['=EVENT_NAME'] = $eventName;
+
+        $siteId = trim($siteId);
+        if ($siteId)
+            $params['filter']['=LID'] = $siteId;
+
+        if (!isset($params['template']))
+            $params['template'] = ['{ID}' => '[{EVENT_NAME}] {SUBJECT}'];
+
+        if (!isset($params['sort']))
+            $params['order'] = ['EVENT_NAME' => 'asc'];
+
+        return self::prepare($params);
 	}
 
 	/**
