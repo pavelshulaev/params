@@ -75,7 +75,7 @@ class rover_params extends CModule
     }
 
 	/**
-	 * РРЅСЃС‚Р°Р»Р»СЏС†РёСЏ С„Р°Р№Р»РѕРІ Рё Р·Р°РІРёСЃРёРјРѕС‚РµР№, СЂРµРіРёСЃС‚СЂР°С†РёСЏ РјРѕРґСѓР»СЏ
+	 * Инсталляция файлов и зависимотей, регистрация модуля
 	 * @author Shulaev (pavel.shulaev@gmail.com)
 	 */
 	private function ProcessInstall()
@@ -93,7 +93,7 @@ class rover_params extends CModule
     }
 
 	/**
-	 * РЈРґР°Р»РµРЅРёРµ С„Р°Р№Р»РѕРІ Рё Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№. РЎРЅСЏС‚РёРµ РјРѕРґСѓР»СЏ СЃ СЂРµРіРёСЃС‚СЂР°С†РёРё
+	 * Удаление файлов и зависимостей. Снятие модуля с регистрации
 	 * @author Shulaev (pavel.shulaev@gmail.com)
 	 */
 	private function ProcessUninstall()
