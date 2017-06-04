@@ -36,7 +36,8 @@ class Form extends Core
 			$is_filtered
 		);
 
-		$params = self::prepare($params);
+		$params = self::prepareParams($params);
+
 		$empty  = $params['empty'];
 		$result = is_null($empty)
 			? []
