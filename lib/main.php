@@ -153,4 +153,28 @@ class Main extends Core
 
 		return self::prepare($params);
 	}
+
+    /**
+     * @param       $object
+     * @param array $params
+     * @return array
+     * @throws ArgumentNullException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	public static function getUserType($object, array $params = [])
+    {
+        $params['class']    = '\Bitrix\Main\UserFieldTable';
+        $params['method']   = 'getList';
+
+        if (!isset($params['template']))
+            $params['template'] = ['{ID}' => '{FIELD_NAME} [{ID}]'];
+
+        if (!isset($params['order']))
+            $params['order'] = ['ID' => 'ASC'];
+
+        if (!isset($params['filter']))
+            $params['filter'] = ['=ENTITY_ID' => $object];
+
+        return self::prepare($params);
+    }
 }

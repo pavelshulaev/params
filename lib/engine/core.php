@@ -135,7 +135,7 @@ class Core
 	 * @return array
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	protected function getSelectFromTemplate($template)
+	protected static function getSelectFromTemplate($template)
 	{
 		$keyTemplate    = key($template);
 		$nameTemplate   = $template[$keyTemplate];
@@ -149,7 +149,7 @@ class Core
 	 * @return array
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	protected function getFieldsNames($string)
+	protected static function getFieldsNames($string)
 	{
 		preg_match_all('/{([^}]+)}/usi', $string, $matches);
 
