@@ -107,7 +107,7 @@ class Iblock extends Core
 		if (!isset($params['filter']))
 			$params['filter']= [
 				'=IBLOCK_ID'            => $iblockId,
-				'=ACTIVE'               => 'Y',
+				//'=ACTIVE'               => 'Y',
 				'=IBLOCK_SECTION_ID'    => null,
 			];
 
