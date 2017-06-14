@@ -10,9 +10,10 @@
 
 namespace Rover\Params;
 
+use Bitrix\Iblock\IblockSiteTable;
 use Bitrix\Iblock\SectionTable;
+use Bitrix\Main\Application;
 use Bitrix\Main\SystemException;
-use Bitrix\Main\DB\Result;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 /**
@@ -60,30 +61,60 @@ class Iblock extends Core
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (http://rover-it.me)
 	 */
-	public static function getByType($type, $siteId = null, array $params = [])
+	public static function getByType($type = null, $siteId = null, array $params = [])
 	{
 		self::checkModule();
 
-		if (!$type)
+		// type == null - no iblocks
+        // type == false - all iblocks
+		if (is_null($type))
 			return self::prepareEmpty($params);
 
 		if (!isset($params['filter'])) {
 
-			$filter = [
-				"=IBLOCK_TYPE_ID"   => $type,
-				'=ACTIVE'           => 'Y'
-			];
+			$filter = [];
 
+			$type = trim($type);
+			if (strlen($type))
+			    $filter["=IBLOCK_TYPE_ID"] = $type;
+
+			$siteId = trim($siteId);
 			if ($siteId)
-				$filter['=SITE_ID'] = $siteId;
+                $filter['=ID'] = self::getIblocksIdsBySiteId($siteId);
+
 			$params['filter']   = $filter;
 		}
 
 		$params['class']    = '\Bitrix\Iblock\IblockTable';
 		$params['method']   = 'getList';
 
+		if (!isset($params['order']))
+		    $params['order'] = ['ID' => 'ASC'];
+
 		return self::prepare($params);
 	}
+
+    /**
+     * @param $siteId
+     * @return array
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	protected static function getIblocksIdsBySiteId($siteId)
+    {
+        $connection = Application::getConnection();
+        $sqlHelper  = $connection->getSqlHelper();
+
+        $sql = 'SELECT IBLOCK_ID FROM ' . $sqlHelper->forSql(IblockSiteTable::getTableName())
+                . ' WHERE SITE_ID="' . $sqlHelper->forSql($siteId) . '"';
+
+        $iblocks    = $connection->query($sql);
+        $result     = [];
+
+        while ($item = $iblocks->fetch())
+        	$result[] = $item['IBLOCK_ID'];
+
+        return $result;
+    }
 
 	/**
 	 * @param           $iblockId
@@ -107,7 +138,6 @@ class Iblock extends Core
 		if (!isset($params['filter']))
 			$params['filter']= [
 				'=IBLOCK_ID'            => $iblockId,
-				//'=ACTIVE'               => 'Y',
 				'=IBLOCK_SECTION_ID'    => null,
 			];
 
@@ -201,7 +231,7 @@ class Iblock extends Core
 			if (intval($sectionId))
 				$filter['=IBLOCK_SECTION_ID'] = intval($sectionId);
 
-			$params['filter']   = $filter;
+			$params['filter'] = $filter;
 		}
 
 		return self::prepare($params);
