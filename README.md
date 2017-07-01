@@ -29,3 +29,8 @@
 Для работы модуля необходим установленный на хостинге php версии 5.4 или выше. 
 ## Контакты
 Модуль активно развивается. Свои вопросы и плжелания вы можете отправлять на электропочту rover.webdev@gmail.com, либо через форму на сайте http://rover-it.me.
+
+## Пожертвования
+Если решение оказалось вам полезным, вы можете оставить пожертование
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QBLE74K4BND7C)
