@@ -1,4 +1,4 @@
 # `\Rover\Params\HighloadBlock` 
-## Списки параметров highload - блоков 
+## РЎРїРёСЃРєРё highload - Р±Р»РѕРєРѕРІ 
 ### `public static function getBlocks(array $params = [])`
-Возвращает существующие highload - блоки.
+Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РІ СЃРёСЃС‚РµРјРµ highload - Р±Р»РѕРєРё.

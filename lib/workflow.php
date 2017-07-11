@@ -41,7 +41,6 @@ class Workflow extends Core
 
 			$rsWFStatus = \CWorkflowStatus::GetList($by = "c_sort", $order = "asc", ["ACTIVE" => "Y"], $is_filtered);
 
-
 			while ($arWFS = $rsWFStatus->Fetch())
 				self::$statuses[$arWFS["ID"]] = $arWFS["TITLE"];
 		}
