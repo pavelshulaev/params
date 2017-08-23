@@ -2,10 +2,10 @@
 /**
  * Created by PhpStorm.
  * User: lenovo
- * Date: 19.12.2016
- * Time: 17:33
+ * Date: 23.08.2017
+ * Time: 16:31
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -13,35 +13,30 @@ namespace Rover\Params;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
-class Forum extends Core
+/**
+ * Class Blog
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
+class Blog extends Core
 {
-	protected static $moduleName = 'forum';
+    /**
+     * @var string
+     */
+    protected static $moduleName = 'blog';
 
-	protected static $groups;
-	/**
-	 * @param array $params
-	 * @return array|null
-	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
-	 */
-	public static function getGroups(array $params = [])
-	{
-		self::checkModule();
-
-		// forum d7 is not ready...
-		/*$query = [
-			'order'     => ['SORT' => 'ASC'],
-			'select'    => ['ID', 'NAME'],
-		];
-
-		$params['class']    = '\Bitrix\Forum\GroupTable';
-		$params['method']   = 'getList';
-		$params['query']    = $query;
-
-		return self::prepare($params);*/
+    /**
+     * @param array $params
+     * @return null
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+    public static function getBlogs(array $params = [])
+    {
+        self::checkModule();
 
         if (empty($params['order']))
-            $params['order'] = ['ID' => 'ASC'];
+            $params['order'] = ['URL' => 'ASC'];
 
         $params     = self::prepareParams($params);
         $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
@@ -57,18 +52,18 @@ class Forum extends Core
             if (isset($params['add_filter']))
                 $filter = array_merge($filter, $params['add_filter']);
 
-			$groups     = \CForumGroup::GetList($params['order'], $filter);
+            $blogs      = \CBlog::GetList($params['order'], $filter, false, false, $params['select']);
             $elements   = [];
 
-			while ($group = $groups->Fetch())
-                $elements[] = $group;
+            while ($blog = $blogs->Fetch())
+                $elements[] = $blog;
 
             $result = self::prepareResult($elements, key($params['template']),
                 $params['template'][key($params['template'])], $result);
 
             Cache::set($cacheKey, $result);
-		}
+        }
 
         return Cache::get($cacheKey);
-	}
+    }
 }

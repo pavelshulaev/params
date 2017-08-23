@@ -152,7 +152,7 @@ class Iblock extends Core
 		$params['select'] = array_merge(['ID', 'LEFT_MARGIN', 'RIGHT_MARGIN', 'DEPTH_LEVEL'],
 			$params['select']);
 
-		$cacheKey = Cache::getKey(serialize($params));
+		$cacheKey = Cache::getKey(__METHOD__, serialize($params));
 
 		if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
