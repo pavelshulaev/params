@@ -5,7 +5,7 @@
  * Date: 25.10.2016
  * Time: 20:35
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -17,7 +17,7 @@ use Rover\Params\Engine\Core;
  * Class Main
  *
  * @package Rover\Params
- * @author  Pavel Shulaev (http://rover-it.me)
+ * @author  Pavel Shulaev (https://rover-it.me)
  */
 class Main extends Core
 {
@@ -30,7 +30,7 @@ class Main extends Core
 	 * @param bool|false $hideAdmin
 	 * @param array      $params
 	 * @return array|null
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getSysGroups($hideAdmin = false, array $params = [])
 	{
@@ -52,7 +52,7 @@ class Main extends Core
 	 * @param array      $params
 	 * @return array|null
 	 * @throws ArgumentNullException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getUserSysGroups($userId, $hideAdmin = false, array $params = [])
 	{
@@ -72,7 +72,7 @@ class Main extends Core
 	 * @param string $lid
 	 * @param array  $params
 	 * @return array|null
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getEventTypes($lid = 'ru', array $params = [])
 	{
@@ -93,7 +93,7 @@ class Main extends Core
      * @param string $siteId
      * @param array  $params
      * @return array|null
-     * @author Pavel Shulaev (http://rover-it.me)
+     * @author Pavel Shulaev (https://rover-it.me)
      */
 	public static function getEventMessages($siteId = '', $eventName = null, array $params = [])
 	{
@@ -122,7 +122,7 @@ class Main extends Core
 	/**
 	 * @param $params
 	 * @return array|null
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getSites(array $params = [])
 	{
@@ -138,7 +138,7 @@ class Main extends Core
 	/**
 	 * @param array $params
 	 * @return array|null
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getUsers(array $params = [])
 	{

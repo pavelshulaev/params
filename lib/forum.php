@@ -5,7 +5,7 @@
  * Date: 19.12.2016
  * Time: 17:33
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -22,7 +22,7 @@ class Forum extends Core
 	 * @param array $params
 	 * @return array|null
 	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getGroups(array $params = [])
 	{

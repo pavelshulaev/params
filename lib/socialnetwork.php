@@ -5,7 +5,7 @@
  * Date: 25.10.2016
  * Time: 20:31
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -16,7 +16,7 @@ use Rover\Params\Engine\Core;
  * Class Socialnetwork
  *
  * @package Rover\Params
- * @author  Pavel Shulaev (http://rover-it.me)
+ * @author  Pavel Shulaev (https://rover-it.me)
  */
 class Socialnetwork extends Core
 {
@@ -29,7 +29,7 @@ class Socialnetwork extends Core
 	 * @param array $params
 	 * @return array|null
 	 * @throws SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getWorkGroups(array $params = [])
 	{

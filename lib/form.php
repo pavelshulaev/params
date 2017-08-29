@@ -5,7 +5,7 @@
  * Date: 17.11.2016
  * Time: 17:46
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -23,7 +23,7 @@ class Form extends Core
 	 * @param array $params
 	 * @return mixed
 	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getWebForms(array $params = [])
 	{
@@ -53,7 +53,7 @@ class Form extends Core
 	 * @param       $formId
 	 * @return array
 	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getQuestions($formId)
 	{

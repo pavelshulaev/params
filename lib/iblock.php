@@ -5,7 +5,7 @@
  * Date: 09.10.2016
  * Time: 14:58
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -20,7 +20,7 @@ use Rover\Params\Engine\Core;
  * Class Iblock
  *
  * @package Rover\Params
- * @author  Pavel Shulaev (http://rover-it.me)
+ * @author  Pavel Shulaev (https://rover-it.me)
  */
 class Iblock extends Core
 {
@@ -34,7 +34,7 @@ class Iblock extends Core
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getTypes(array $params = [])
 	{
@@ -59,7 +59,7 @@ class Iblock extends Core
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getByType($type = null, $siteId = null, array $params = [])
 	{
@@ -123,7 +123,7 @@ class Iblock extends Core
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getSections($iblockId, $withSubsections = true, array $params = [])
 	{
@@ -210,7 +210,7 @@ class Iblock extends Core
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getElements($iblockId, $sectionId = null, array $params = [])
 	{
@@ -243,7 +243,7 @@ class Iblock extends Core
 	 * @return array|null
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getProps($iblockId, array $params = [])
 	{
