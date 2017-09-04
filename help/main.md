@@ -8,6 +8,11 @@
 Возвращает типы почтовых событий
 * `$lid` - фильтр по языку
 
+### `public static function getEventMessages($siteId = '', $eventName = null, array $params = [])`
+Возвращает шаблоны почтовых событий
+* `$siteId` - фильтр по сайту
+* `$eventName` - фильтр по типу почтового события
+
 ### `public static function getSites(array $params = [])`
 Возвращает список существующих сайтов.
 
