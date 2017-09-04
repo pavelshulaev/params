@@ -5,7 +5,7 @@
  * Date: 29.10.2016
  * Time: 18:33
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params\Engine;
@@ -34,7 +34,7 @@ class Core
 	/**
 	 * @throws SystemException
 	 * @throws \Bitrix\Main\LoaderException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	protected static function checkModule()
 	{
@@ -48,7 +48,7 @@ class Core
 	/**
 	 * @param $params
 	 * @return mixed
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	protected static function prepareParams(array $params = [])
 	{
@@ -85,7 +85,7 @@ class Core
 	 * @param array $params
 	 * @return array|null
 	 * @throws ArgumentOutOfRangeException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	protected static function prepare(array $params = [])
 	{
@@ -133,9 +133,9 @@ class Core
 	/**
 	 * @param $template
 	 * @return array
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	protected function getSelectFromTemplate($template)
+	protected static function getSelectFromTemplate($template)
 	{
 		$keyTemplate    = key($template);
 		$nameTemplate   = $template[$keyTemplate];
@@ -147,9 +147,9 @@ class Core
 	/**
 	 * @param $string
 	 * @return array
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	protected function getFieldsNames($string)
+	protected static function getFieldsNames($string)
 	{
 		preg_match_all('/{([^}]+)}/usi', $string, $matches);
 
@@ -164,7 +164,7 @@ class Core
 	 * @param       $nameTemplate
 	 * @param array $result
 	 * @return array
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	protected static function prepareResult(array $elements, $keyTemplate, $nameTemplate, array $result = [])
 	{
@@ -187,7 +187,7 @@ class Core
 	 * @param $mask
 	 * @param $template
 	 * @return mixed
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	protected static function prepareName($element, $mask, $template)
 	{
@@ -202,7 +202,7 @@ class Core
 	/**
 	 * @param $template
 	 * @return array
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	protected static function getMask($template)
 	{
@@ -222,7 +222,7 @@ class Core
 	/**
 	 * @param array $params
 	 * @return array|null
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	protected static function prepareEmpty(array $params = [])
 	{

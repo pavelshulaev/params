@@ -5,7 +5,7 @@
  * Date: 19.12.2016
  * Time: 16:33
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -21,7 +21,7 @@ class Workflow extends Core
 	/**
 	 * @param array $params
 	 * @return array
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getStatuses(array $params = [])
 	{
@@ -40,7 +40,6 @@ class Workflow extends Core
 			}
 
 			$rsWFStatus = \CWorkflowStatus::GetList($by = "c_sort", $order = "asc", ["ACTIVE" => "Y"], $is_filtered);
-
 
 			while ($arWFS = $rsWFStatus->Fetch())
 				self::$statuses[$arWFS["ID"]] = $arWFS["TITLE"];

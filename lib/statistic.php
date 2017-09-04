@@ -5,7 +5,7 @@
  * Date: 10.12.2016
  * Time: 23:41
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -24,7 +24,7 @@ class Statistic extends Core
 	 * @param null $referer2
 	 * @return array
 	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getAdvCompanies($referer1 = null, $referer2 = null)
 	{

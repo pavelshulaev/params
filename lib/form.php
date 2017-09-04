@@ -5,11 +5,13 @@
  * Date: 17.11.2016
  * Time: 17:46
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
 
+use Bitrix\Main\ArgumentNullException;
+use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
 class Form extends Core
@@ -23,7 +25,7 @@ class Form extends Core
 	 * @param array $params
 	 * @return mixed
 	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getWebForms(array $params = [])
 	{
@@ -37,6 +39,7 @@ class Form extends Core
 		);
 
 		$params = self::prepareParams($params);
+
 		$empty  = $params['empty'];
 		$result = is_null($empty)
 			? []
@@ -48,32 +51,63 @@ class Form extends Core
 		return $result;
 	}
 
-	/**
-	 * @param       $formId
-	 * @return array
-	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
-	 */
-	public static function getQuestions($formId)
+    /**
+     * @param       $formId
+     * @param array $params
+     * @return null
+     * @throws ArgumentNullException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	public static function getQuestions($formId, array $params = [])
 	{
 		self::checkModule();
 
-		$fields         = [];
-		$is_filtered    = null;
+        $formId = intval($formId);
+        if (!$formId)
+            throw new ArgumentNullException('formId');
 
-		$rsQuestions = \CFormField::GetList(
-			$formId,
-			"ALL",
-			$by = "sort",
-			$order = "asc",
-			["ACTIVE" => "Y"],
-			$is_filtered
-		);
+        if (empty($params['order']))
+            $params['order'] = ['sort' => 'asc'];
 
-		while ($arQ = $rsQuestions->Fetch())
-			$fields[$arQ['ID']]
-				= $arQ['TITLE'] . ' ('.$arQ['SID'].')';
+        if (empty($params['template']))
+            $params['template'] = ['{ID}' => '{TITLE} ({SID})'];
 
-		return $fields;
+        $params     = self::prepareParams($params);
+        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
+
+        if((false === (Cache::check($cacheKey))) || $params['reload']) {
+
+            $empty  = $params['empty'];
+            $result = is_null($empty)
+                ? []
+                : [0 => $empty];
+
+            $filter = $params['filter'];
+            if (isset($params['add_filter']))
+                $filter = array_merge($filter, $params['add_filter']);
+
+            $is_filtered = null;
+
+            $rsQuestions = \CFormField::GetList(
+                $formId,
+                "ALL",
+                $by = key($params['order']),
+                $order = $params['order'][$by],
+                $filter,
+                $is_filtered
+            );
+
+            $elements   = [];
+
+            while ($question = $rsQuestions->Fetch())
+                $elements[] = $question;
+
+            $result = self::prepareResult($elements, key($params['template']),
+                $params['template'][key($params['template'])], $result);
+
+            Cache::set($cacheKey, $result);
+        }
+
+        return Cache::get($cacheKey);
 	}
 }

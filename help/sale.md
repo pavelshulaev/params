@@ -1,4 +1,4 @@
-# `\Rover\Params\Sale` 
-## Списки параметров интернет-магазина
-### `public static function getOrderStatuses(array $params = [])`
-Возвращает статусы заказов.
+#`\Rover\Params\Sale` 
+## РЎРїРёСЃРєРё РїР°СЂР°РјРµС‚СЂРѕРІ РёРЅС‚РµСЂРЅРµС‚-РјР°РіР°Р·РёРЅР°
+###`public static function getOrderStatuses(array $params = [])`
+Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°С‚СѓСЃС‹ Р·Р°РєР°Р·Р°.

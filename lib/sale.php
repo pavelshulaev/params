@@ -5,7 +5,7 @@
  * Date: 21.12.2016
  * Time: 16:43
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params;
@@ -16,7 +16,7 @@ use Rover\Params\Engine\Core;
  * Class Sale
  *
  * @package Rover\Params
- * @author  Pavel Shulaev (http://rover-it.me)
+ * @author  Pavel Shulaev (https://rover-it.me)
  */
 class Sale extends Core
 {
@@ -29,7 +29,7 @@ class Sale extends Core
 	 * @param array $params
 	 * @return array|null
 	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getOrderStatuses(array $params = [])
 	{
@@ -51,4 +51,25 @@ class Sale extends Core
 
 		return self::prepare($params);
 	}
+
+    /**
+     * @param array $params
+     * @return array|null
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	public static function getPaySystems(array $params = [])
+    {
+        self::checkModule();
+
+        $params['class']    = 'Bitrix\Sale\Internals\PaySystemActionTable';
+        $params['method']   = 'getList';
+
+        if (!isset($params['order']))
+            $params['order'] = ['NAME' => 'ASC'];
+
+        if (!isset($params['template']))
+            $params['template'] = ['{PAY_SYSTEM_ID}' => '{NAME} [{PAY_SYSTEM_ID}]'];
+
+        return self::prepare($params);
+    }
 }

@@ -5,7 +5,7 @@
  * Date: 01.11.2016
  * Time: 21:52
  *
- * @author Pavel Shulaev (http://rover-it.me)
+ * @author Pavel Shulaev (https://rover-it.me)
  */
 
 namespace Rover\Params\Engine;
@@ -20,7 +20,7 @@ class Cache
 	/**
 	 * @param $key
 	 * @param $value
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function set($key, $value)
 	{
@@ -30,7 +30,7 @@ class Cache
 	/**
 	 * @param $key
 	 * @return bool
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function check($key)
 	{
@@ -40,7 +40,7 @@ class Cache
 	/**
 	 * @param $key
 	 * @return null
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function get($key)
 	{
@@ -52,7 +52,7 @@ class Cache
 
 	/**
 	 * @return string
-	 * @author Pavel Shulaev (http://rover-it.me)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	public static function getKey()
 	{
