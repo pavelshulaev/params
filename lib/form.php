@@ -73,7 +73,7 @@ class Form extends Core
             $params['template'] = ['{ID}' => '{TITLE} ({SID})'];
 
         $params     = self::prepareParams($params);
-        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
+        $cacheKey   = Cache::getKey(__METHOD__, $formId, serialize($params));
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
