@@ -31,24 +31,38 @@ class Form extends Core
 	{
 		self::checkModule();
 
-		$rsForms = \CForm::GetList(
-			$by = "s_id",
-			$order = "ASC",
-			[],
-			$is_filtered
-		);
+        if (empty($params['order']))
+            $params['order'] = ['s_id' => 'ASC'];
 
-		$params = self::prepareParams($params);
+        if (empty($params['template']))
+            $params['template'] = ['{ID}' => '[{ID}] {NAME}'];
 
-		$empty  = $params['empty'];
-		$result = is_null($empty)
-			? []
-			: [0 => $empty];
+        $params     = self::prepareParams($params);
+        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
 
-		while ($form = $rsForms->Fetch())
-			$result[$form['ID']] = '['.$form['ID'].'] ' . $form['NAME'];
+        if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-		return $result;
+            $result = self::getStartResult($params['empty']);
+
+            $rsForms = \CForm::GetList(
+                $by = key($params['order']),
+                $order = $params['order'][$by],
+                $params['filter'],
+                $is_filtered
+            );
+
+            $elements   = [];
+
+            while ($question = $rsForms->Fetch())
+                $elements[] = $question;
+
+            $result = self::prepareResult($elements, key($params['template']),
+                $params['template'][key($params['template'])], $result);
+
+            Cache::set($cacheKey, $result);
+        }
+
+        return Cache::get($cacheKey);
 	}
 
     /**
@@ -77,14 +91,7 @@ class Form extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $empty  = $params['empty'];
-            $result = is_null($empty)
-                ? []
-                : [0 => $empty];
-
-            $filter = $params['filter'];
-            if (isset($params['add_filter']))
-                $filter = array_merge($filter, $params['add_filter']);
+            $result = self::getStartResult($params['empty']);
 
             $is_filtered = null;
 
@@ -93,7 +100,7 @@ class Form extends Core
                 "ALL",
                 $by = key($params['order']),
                 $order = $params['order'][$by],
-                $filter,
+                $params['filter'],
                 $is_filtered
             );
 

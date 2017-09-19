@@ -81,6 +81,16 @@ class Core
 		return $params;
 	}
 
+    /**
+     * @param $empty
+     * @return array
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	protected static function getStartResult($empty)
+    {
+        return is_null($empty) ? [] : [0 => $empty];
+    }
+
 	/**
 	 * @param array $params
 	 * @return array|null
@@ -95,11 +105,7 @@ class Core
 
 		if((false === (Cache::check($cacheKey))) || $reload)  {
 
-			$empty  = $params['empty'];
-			$result = is_null($empty)
-				? []
-				: [0 => $empty];
-
+			$result = self::getStartResult($params['empty']);
 			$class  = $params['class'];
 			$method = $params['method'];
 
