@@ -31,29 +31,26 @@ class Blog extends Core
      * @return null
      * @author Pavel Shulaev (https://rover-it.me)
      */
-    public static function getBlogs(array $params = [])
+    public static function getBlogs(array $params = array())
     {
         self::checkModule();
 
         if (empty($params['order']))
-            $params['order'] = ['URL' => 'ASC'];
+            $params['order'] = array('URL' => 'ASC');
 
         $params     = self::prepareParams($params);
         $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $empty  = $params['empty'];
-            $result = is_null($empty)
-                ? []
-                : [0 => $empty];
+            $result = self::getStartResult($params['empty']);
 
             $filter = $params['filter'];
             if (isset($params['add_filter']))
                 $filter = array_merge($filter, $params['add_filter']);
 
             $blogs      = \CBlog::GetList($params['order'], $filter, false, false, $params['select']);
-            $elements   = [];
+            $elements   = array();
 
             while ($blog = $blogs->Fetch())
                 $elements[] = $blog;

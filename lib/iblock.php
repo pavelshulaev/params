@@ -36,7 +36,7 @@ class Iblock extends Core
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getTypes(array $params = [])
+	public static function getTypes(array $params = array())
 	{
 		self::checkModule();
 
@@ -44,10 +44,10 @@ class Iblock extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter']))
-			$params['filter'] = ['=LANG_MESSAGE.LANGUAGE_ID' => LANGUAGE_ID];
+			$params['filter'] = array('=LANG_MESSAGE.LANGUAGE_ID' => LANGUAGE_ID);
 
 		if (!isset($params['select']))
-			$params['select'] = ['ID', 'NAME' => 'LANG_MESSAGE.NAME'];
+			$params['select'] = array('ID', 'NAME' => 'LANG_MESSAGE.NAME');
 
 		return self::prepare($params);
 	}
@@ -61,7 +61,7 @@ class Iblock extends Core
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getByType($type = null, $siteId = null, array $params = [])
+	public static function getByType($type = null, $siteId = null, array $params = array())
 	{
 		self::checkModule();
 
@@ -72,7 +72,7 @@ class Iblock extends Core
 
 		if (!isset($params['filter'])) {
 
-			$filter = [];
+			$filter = array();
 
 			$type = trim($type);
 			if (strlen($type))
@@ -89,7 +89,7 @@ class Iblock extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['order']))
-		    $params['order'] = ['ID' => 'ASC'];
+		    $params['order'] = array('ID' => 'ASC');
 
 		return self::prepare($params);
 	}
@@ -108,7 +108,7 @@ class Iblock extends Core
                 . ' WHERE SITE_ID="' . $sqlHelper->forSql($siteId) . '"';
 
         $iblocks    = $connection->query($sql);
-        $result     = [];
+        $result     = array();
 
         while ($item = $iblocks->fetch())
         	$result[] = $item['IBLOCK_ID'];
@@ -125,7 +125,7 @@ class Iblock extends Core
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getSections($iblockId, $withSubsections = true, array $params = [])
+	public static function getSections($iblockId, $withSubsections = true, array $params = array())
 	{
 		self::checkModule();
 
@@ -136,53 +136,50 @@ class Iblock extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter']))
-			$params['filter']= [
+			$params['filter'] = array(
 				'=IBLOCK_ID'            => $iblockId,
 				'=IBLOCK_SECTION_ID'    => null,
-			];
+            );
 
 		if (!$withSubsections)
 			return self::prepare($params);
 
 		if (!isset($params['template']))
-			$params['template'] = ['{ID}' => '{NAME} [{ID}]'];
+			$params['template'] = array('{ID}' => '{NAME} [{ID}]');
 
 		$params = self::prepareParams($params);
 
-		$params['select'] = array_merge(['ID', 'LEFT_MARGIN', 'RIGHT_MARGIN', 'DEPTH_LEVEL'],
+		$params['select'] = array_merge(array('ID', 'LEFT_MARGIN', 'RIGHT_MARGIN', 'DEPTH_LEVEL'),
 			$params['select']);
 
 		$cacheKey = Cache::getKey(__METHOD__, serialize($params));
 
 		if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-			$empty  = $params['empty'];
-			$result = is_null($empty)
-				? []
-				: [0 => $empty];
+            $result = self::getStartResult($params['empty']);
 
-			$query = [
+			$query = array(
 				'filter'    => $params['filter'],
 				'order'     => $params['order'],
 				'select'    => $params['select']
-			];
+            );
 
 			$parentSections = SectionTable::getList($query);
-			$preResult = [];
+			$preResult = array();
 
 			while ($parentSection = $parentSections->fetch())
 			{
 				$preResult[] = $parentSection;
 
-				$subQuery = [
-					'filter' => [
+				$subQuery = array(
+					'filter' => array(
 						'IBLOCK_ID'     => $iblockId,
 						'>LEFT_MARGIN'  => $parentSection['LEFT_MARGIN'],
 						'<RIGHT_MARGIN' => $parentSection['RIGHT_MARGIN'],
-					],
+                    ),
 					'select'    => $params['select'],
-					'order'     => ['LEFT_MARGIN' => 'asc']
-				];
+					'order'     => array('LEFT_MARGIN' => 'asc')
+                );
 
 				$childSections = SectionTable::getList($subQuery);
 
@@ -212,7 +209,7 @@ class Iblock extends Core
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getElements($iblockId, $sectionId = null, array $params = [])
+	public static function getElements($iblockId, $sectionId = null, array $params = array())
 	{
 		self::checkModule();
 
@@ -223,10 +220,10 @@ class Iblock extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter'])) {
-			$filter = [
+			$filter = array(
 				'=IBLOCK_ID'    => $iblockId,
 				'=ACTIVE'       => 'Y'
-			];
+            );
 
 			if (intval($sectionId))
 				$filter['=IBLOCK_SECTION_ID'] = intval($sectionId);
@@ -245,7 +242,7 @@ class Iblock extends Core
 	 * @throws \Bitrix\Main\ArgumentException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getProps($iblockId, array $params = [])
+	public static function getProps($iblockId, array $params = array())
 	{
 		self::checkModule();
 
@@ -256,10 +253,10 @@ class Iblock extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter']))
-			$params['filter']   = [
+			$params['filter']   = array(
 				'=IBLOCK_ID'    => $iblockId,
 				'=ACTIVE'       => 'Y',
-			];
+            );
 
 		return self::prepare($params);
 	}

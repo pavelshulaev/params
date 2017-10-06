@@ -31,7 +31,7 @@ class Socialnetwork extends Core
 	 * @throws SystemException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getWorkGroups(array $params = [])
+	public static function getWorkGroups(array $params = array())
 	{
 		self::checkModule();
 
@@ -39,7 +39,7 @@ class Socialnetwork extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['order']))
-			$params['order'] = ['ID' => 'asc'];
+			$params['order'] = array('ID' => 'asc');
 
 		return self::prepare($params);
 	}

@@ -31,7 +31,7 @@ class Sale extends Core
 	 * @throws \Bitrix\Main\SystemException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getOrderStatuses(array $params = [])
+	public static function getOrderStatuses(array $params = array())
 	{
 		self::checkModule();
 
@@ -41,13 +41,13 @@ class Sale extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter']))
-			$params['filter'] = ['=LID' => $lid];
+			$params['filter'] = array('=LID' => $lid);
 
 		if (!isset($params['order']))
-			$params['order'] = ['STATUS.SORT' => 'ASC'];
+			$params['order'] = array('STATUS.SORT' => 'ASC');
 
 		if (!isset($params['select']))
-			$params['select'] = ['ID' => 'STATUS_ID', 'NAME'];
+			$params['select'] = array('ID' => 'STATUS_ID', 'NAME');
 
 		return self::prepare($params);
 	}
@@ -57,7 +57,7 @@ class Sale extends Core
      * @return array|null
      * @author Pavel Shulaev (https://rover-it.me)
      */
-	public static function getPaySystems(array $params = [])
+	public static function getPaySystems(array $params = array())
     {
         self::checkModule();
 
@@ -65,10 +65,10 @@ class Sale extends Core
         $params['method']   = 'getList';
 
         if (!isset($params['order']))
-            $params['order'] = ['NAME' => 'ASC'];
+            $params['order'] = array('NAME' => 'ASC');
 
         if (!isset($params['template']))
-            $params['template'] = ['{PAY_SYSTEM_ID}' => '{NAME} [{PAY_SYSTEM_ID}]'];
+            $params['template'] = array('{PAY_SYSTEM_ID}' => '{NAME} [{PAY_SYSTEM_ID}]');
 
         return self::prepare($params);
     }

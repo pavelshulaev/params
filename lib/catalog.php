@@ -30,7 +30,7 @@ class Catalog extends Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getPriceGroups(array $params = [])
+	public static function getPriceGroups(array $params = array())
 	{
 		self::checkModule();
 

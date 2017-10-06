@@ -30,7 +30,7 @@ class HighloadBlock extends Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getBlocks(array $params = [])
+	public static function getBlocks(array $params = array())
 	{
 		self::checkModule();
 
@@ -38,7 +38,7 @@ class HighloadBlock extends Core
 		$params['method']   = 'getList';
 
 		if (!isset($params['order']))
-			$params['order'] = ['ID' => 'asc'];
+			$params['order'] = array('ID' => 'asc');
 
 		return self::prepare($params);
 	}

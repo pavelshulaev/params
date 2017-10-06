@@ -30,18 +30,18 @@ class Currency extends Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getCurrencies(array $params = [])
+	public static function getCurrencies(array $params = array())
 	{
 		self::checkModule();
 
 		if (!isset($params['select']))
-			$params['select'] = ['CURRENCY', 'NAME' => 'LANG_FORMAT.FULL_NAME'];
+			$params['select'] = array('CURRENCY', 'NAME' => 'LANG_FORMAT.FULL_NAME');
 
 		if (!isset($params['template']))
-			$params['template'] = ['{CURRENCY}' => '[{CURRENCY}] {NAME}'];
+			$params['template'] = array('{CURRENCY}' => '[{CURRENCY}] {NAME}');
 
 		if (!isset($params['filter']))
-			$params['filter'] = ['=LANG_FORMAT.LID' => LANGUAGE_ID];
+			$params['filter'] = array('=LANG_FORMAT.LID' => LANGUAGE_ID);
 
 		$params['class']    = '\Bitrix\Currency\CurrencyTable';
 		$params['method']   = 'getList';

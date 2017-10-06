@@ -10,41 +10,55 @@
 
 namespace Rover\Params;
 
+use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
 class Workflow extends Core
 {
+    /**
+     * @var string
+     */
 	protected static $moduleName = 'workflow';
-
-	protected static $statuses;
 
 	/**
 	 * @param array $params
 	 * @return array
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getStatuses(array $params = [])
+	public static function getStatuses(array $params = array())
 	{
 		self::checkModule();
 
-		if (is_null(self::$statuses) || (isset($params['reload']) && $params['reload'])) {
+        if (empty($params['order']))
+            $params['order'] = array('c_sort' => 'asc');
 
-			self::$statuses = [];
+        if (empty($params['filter']))
+            $params['filter'] = array("ACTIVE" => "Y");
 
-			if (array_key_exists('empty', $params) && $params['empty'] !== null)
-			{
-				if (!$params['empty'])
-					$params['empty'] = '-';
+        $params     = self::prepareParams($params);
+        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
 
-				self::$statuses[0] = $params['empty'];
-			}
+        if ((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-			$rsWFStatus = \CWorkflowStatus::GetList($by = "c_sort", $order = "asc", ["ACTIVE" => "Y"], $is_filtered);
+            $result = self::getStartResult($params['empty']);
 
-			while ($arWFS = $rsWFStatus->Fetch())
-				self::$statuses[$arWFS["ID"]] = $arWFS["TITLE"];
-		}
+            $rsWFStatus = \CWorkflowStatus::GetList(
+                $by = key($params['order']),
+                $order = $params['order'][$by],
+                $params['filter'],
+                $is_filtered);
 
-		return self::$statuses;
+            $elements   = array();
+
+            while ($question = $rsWFStatus->Fetch())
+                $elements[] = $question;
+
+            $result = self::prepareResult($elements, key($params['template']),
+                $params['template'][key($params['template'])], $result);
+
+            Cache::set($cacheKey, $result);
+        }
+
+        return Cache::get($cacheKey);
 	}
 }

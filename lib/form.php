@@ -27,15 +27,15 @@ class Form extends Core
 	 * @throws \Bitrix\Main\SystemException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getWebForms(array $params = [])
+	public static function getWebForms(array $params = array())
 	{
 		self::checkModule();
 
         if (empty($params['order']))
-            $params['order'] = ['s_id' => 'ASC'];
+            $params['order'] = array('s_id' => 'ASC');
 
         if (empty($params['template']))
-            $params['template'] = ['{ID}' => '[{ID}] {NAME}'];
+            $params['template'] = array('{ID}' => '[{ID}] {NAME}');
 
         $params     = self::prepareParams($params);
         $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
@@ -51,7 +51,7 @@ class Form extends Core
                 $is_filtered
             );
 
-            $elements   = [];
+            $elements = array();
 
             while ($question = $rsForms->Fetch())
                 $elements[] = $question;
@@ -72,7 +72,7 @@ class Form extends Core
      * @throws ArgumentNullException
      * @author Pavel Shulaev (https://rover-it.me)
      */
-	public static function getQuestions($formId, array $params = [])
+	public static function getQuestions($formId, array $params = array())
 	{
 		self::checkModule();
 
@@ -81,10 +81,10 @@ class Form extends Core
             throw new ArgumentNullException('formId');
 
         if (empty($params['order']))
-            $params['order'] = ['sort' => 'asc'];
+            $params['order'] = array('sort' => 'asc');
 
         if (empty($params['template']))
-            $params['template'] = ['{ID}' => '{TITLE} ({SID})'];
+            $params['template'] = array('{ID}' => '{TITLE} ({SID})');
 
         $params     = self::prepareParams($params);
         $cacheKey   = Cache::getKey(__METHOD__, $formId, serialize($params));
@@ -104,7 +104,7 @@ class Form extends Core
                 $is_filtered
             );
 
-            $elements   = [];
+            $elements   = array();
 
             while ($question = $rsQuestions->Fetch())
                 $elements[] = $question;

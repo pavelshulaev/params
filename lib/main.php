@@ -32,16 +32,16 @@ class Main extends Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getSysGroups($hideAdmin = false, array $params = [])
+	public static function getSysGroups($hideAdmin = false, array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\GroupTable';
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter']) && $hideAdmin)
-			$params['filter'] = ['!ID' => 1];
+			$params['filter'] = array('!ID' => 1);
 
 		if (!isset($params['order']))
-			$params['order'] = ['ID' => 'ASC'];
+			$params['order'] = array('ID' => 'ASC');
 
 		return self::prepare($params);
 	}
@@ -54,14 +54,14 @@ class Main extends Core
 	 * @throws ArgumentNullException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getUserSysGroups($userId, $hideAdmin = false, array $params = [])
+	public static function getUserSysGroups($userId, $hideAdmin = false, array $params = array())
 	{
 		$userId = intval($userId);
 		if (!$userId)
 			throw new ArgumentNullException('userId');
 
 		if (!isset($params['add_filter']))
-			$params['add_filter'] = [];
+			$params['add_filter'] = array();
 
 		$params['add_filter']['=ID'] = \CUser::GetUserGroup($userId);
 
@@ -74,16 +74,16 @@ class Main extends Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getEventTypes($lid = 'ru', array $params = [])
+	public static function getEventTypes($lid = 'ru', array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\Mail\Internal\EventTypeTable';
 		$params['method']   = 'getList';
 
 		if (!isset($params['filter']))
-			$params['filter'] = ['=LID' => $lid];
+			$params['filter'] = array('=LID' => $lid);
 
 		if (!isset($params['template']))
-			$params['template'] = ['{ID}' => '{NAME} [{EVENT_NAME}]'];
+			$params['template'] = array('{ID}' => '{NAME} [{EVENT_NAME}]');
 
 		return self::prepare($params);
 	}
@@ -95,13 +95,13 @@ class Main extends Core
      * @return array|null
      * @author Pavel Shulaev (https://rover-it.me)
      */
-	public static function getEventMessages($siteId = '', $eventName = null, array $params = [])
+	public static function getEventMessages($siteId = '', $eventName = null, array $params = array())
 	{
         $params['class']    = '\Bitrix\Main\Mail\Internal\EventMessageTable';
         $params['method']   = 'getList';
 
         if (!isset($params['filter']))
-            $params['filter'] = [];
+            $params['filter'] = array();
 
         if (!empty($eventName))
             $params['filter']['=EVENT_NAME'] = $eventName;
@@ -111,10 +111,10 @@ class Main extends Core
             $params['filter']['=LID'] = $siteId;
 
         if (!isset($params['template']))
-            $params['template'] = ['{ID}' => '[{EVENT_NAME}] {SUBJECT}'];
+            $params['template'] = array('{ID}' => '[{EVENT_NAME}] {SUBJECT}');
 
         if (!isset($params['sort']))
-            $params['order'] = ['EVENT_NAME' => 'asc'];
+            $params['order'] = array('EVENT_NAME' => 'asc');
 
         return self::prepare($params);
 	}
@@ -124,13 +124,13 @@ class Main extends Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getSites(array $params = [])
+	public static function getSites(array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\SiteTable';
 		$params['method']   = 'getList';
 
 		if (!isset($params['template']))
-			$params['template'] = ['{LID}' => '[{LID}] {NAME}'];
+			$params['template'] = array('{LID}' => '[{LID}] {NAME}');
 
 		return self::prepare($params);
 	}
@@ -140,16 +140,16 @@ class Main extends Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getUsers(array $params = [])
+	public static function getUsers(array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\UserTable';
 		$params['method']   = 'getList';
 
 		if (!isset($params['template']))
-			$params['template'] = ['{ID}' => '{NAME} {LAST_NAME} ({LOGIN})'];
+			$params['template'] = array('{ID}' => '{NAME} {LAST_NAME} ({LOGIN})');
 
 		if (!isset($params['order']))
-			$params['order'] = ['ID' => 'ASC'];
+			$params['order'] = array('ID' => 'ASC');
 
 		return self::prepare($params);
 	}
@@ -161,19 +161,19 @@ class Main extends Core
      * @throws ArgumentNullException
      * @author Pavel Shulaev (https://rover-it.me)
      */
-	public static function getUserType($object, array $params = [])
+	public static function getUserType($object, array $params = array())
     {
         $params['class']    = '\Bitrix\Main\UserFieldTable';
         $params['method']   = 'getList';
 
         if (!isset($params['template']))
-            $params['template'] = ['{ID}' => '{FIELD_NAME} [{ID}]'];
+            $params['template'] = array('{ID}' => '{FIELD_NAME} [{ID}]');
 
         if (!isset($params['order']))
-            $params['order'] = ['ID' => 'ASC'];
+            $params['order'] = array('ID' => 'ASC');
 
         if (!isset($params['filter']))
-            $params['filter'] = ['=ENTITY_ID' => $object];
+            $params['filter'] = array('=ENTITY_ID' => $object);
 
         return self::prepare($params);
     }

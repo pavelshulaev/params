@@ -20,16 +20,16 @@ class Core
 	/**
 	 * @var array
 	 */
-	protected static $defaults = [
+	protected static $defaults = array(
 		'empty'     => '-',
-		'template'  => ['{ID}' => '[{ID}] {NAME}'],
+		'template'  => array('{ID}' => '[{ID}] {NAME}'),
 		'class'     => '',
 		'method'    => '',
-		'filter'    => [],
-		'add_filter'=> [],
-		'order'     => ['SORT' => 'ASC']
-		//'elements'  => []
-	];
+		'filter'    => array(),
+		'add_filter'=> array(),
+		'order'     => array('SORT' => 'ASC')
+		//'elements'  => array()
+    );
 
 	/**
 	 * @throws SystemException
@@ -50,7 +50,7 @@ class Core
 	 * @return mixed
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	protected static function prepareParams(array $params = [])
+	protected static function prepareParams(array $params = array())
 	{
 		// set default if empty
 		foreach (self::$defaults as $key => $default)
@@ -64,9 +64,9 @@ class Core
 		$nameTemplate   = $template[$keyTemplate];
 
 		if (empty($nameTemplate))
-			$params['template'] = [$keyTemplate => $keyTemplate];
+			$params['template'] = array($keyTemplate => $keyTemplate);
 		elseif (empty($keyTemplate))
-			$params['template'] = [$nameTemplate => $nameTemplate];
+			$params['template'] = array($nameTemplate => $nameTemplate);
 
 		// fix select
 		if (!isset($params['select']))
@@ -88,7 +88,7 @@ class Core
      */
 	protected static function getStartResult($empty)
     {
-        return is_null($empty) ? [] : [0 => $empty];
+        return is_null($empty) ? array() : array(0 => $empty);
     }
 
 	/**
@@ -97,7 +97,7 @@ class Core
 	 * @throws ArgumentOutOfRangeException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	protected static function prepare(array $params = [])
+	protected static function prepare(array $params = array())
 	{
 		$params     = self::prepareParams($params);
 		$cacheKey   = Cache::getKey(serialize($params));
@@ -112,11 +112,11 @@ class Core
 			if (!method_exists($class, $method))
 				return $result;
 
-			$query = [
+			$query = array(
 				'filter'    => $params['filter'],
 				'select'    => $params['select'],
 				'order'     => $params['order']
-			];
+            );
 			/**
 			 * @var Result $rcElements
 			 */
@@ -161,7 +161,7 @@ class Core
 
 		return isset($matches[1])
 			? $matches[1]
-			: [];
+			: array();
 	}
 
 	/**
@@ -172,7 +172,7 @@ class Core
 	 * @return array
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	protected static function prepareResult(array $elements, $keyTemplate, $nameTemplate, array $result = [])
+	protected static function prepareResult(array $elements, $keyTemplate, $nameTemplate, array $result = array())
 	{
 		$nameMask   = self::getMask($nameTemplate);
 		$keyMask    = self::getMask($keyTemplate);
@@ -212,7 +212,7 @@ class Core
 	 */
 	protected static function getMask($template)
 	{
-		$mask = [];
+		$mask = array();
 		preg_match_all('/{([^}]+)}/si', $template, $matches);
 
 		// check if empty template
@@ -230,9 +230,9 @@ class Core
 	 * @return array|null
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	protected static function prepareEmpty(array $params = [])
+	protected static function prepareEmpty(array $params = array())
 	{
-		$params['elements'] = [];
+		$params['elements'] = array();
 
 		return self::prepare($params);
 	}

@@ -30,7 +30,7 @@ class Statistic extends Core
 	{
 		self::checkModule();
 
-		$filter = [];
+		$filter = array();
 
 		if (!is_null($referer1))
 			$filter['REFERER1'] = $referer1;
@@ -39,7 +39,7 @@ class Statistic extends Core
 			$filter['REFERER2'] = $referer2;
 
 		$companies  = \CAdv::GetSimpleList($by = "s_referer1", $order = "desc", $filter, $is_filtered);
-		$result     = [];
+		$result     = array();
 
 		while ($company = $companies->Fetch()){
 

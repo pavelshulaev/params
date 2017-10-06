@@ -24,7 +24,7 @@ class Forum extends Core
 	 * @throws \Bitrix\Main\SystemException
 	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
-	public static function getGroups(array $params = [])
+	public static function getGroups(array $params = array())
 	{
 		self::checkModule();
 
@@ -41,24 +41,17 @@ class Forum extends Core
 		return self::prepare($params);*/
 
         if (empty($params['order']))
-            $params['order'] = ['ID' => 'ASC'];
+            $params['order'] = array('ID' => 'ASC');
 
         $params     = self::prepareParams($params);
         $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $empty  = $params['empty'];
-            $result = is_null($empty)
-                ? []
-                : [0 => $empty];
+            $result = self::getStartResult($params['empty']);
 
-            $filter = $params['filter'];
-            if (isset($params['add_filter']))
-                $filter = array_merge($filter, $params['add_filter']);
-
-			$groups     = \CForumGroup::GetList($params['order'], $filter);
-            $elements   = [];
+			$groups     = \CForumGroup::GetList($params['order'], $params['filter']);
+            $elements   = array();
 
 			while ($group = $groups->Fetch())
                 $elements[] = $group;
