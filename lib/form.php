@@ -14,6 +14,12 @@ use Bitrix\Main\ArgumentNullException;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
+/**
+ * Class Form
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
 class Form extends Core
 {
 	/**

@@ -15,8 +15,19 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\DB\Result;
 
-class Core
+/**
+ * Class Core
+ *
+ * @package Rover\Params\Engine
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
+abstract class Core
 {
+    /**
+     * @var string
+     */
+    protected static $moduleName;
+
 	/**
 	 * @var array
 	 */
@@ -38,7 +49,7 @@ class Core
 	 */
 	protected static function checkModule()
 	{
-		if (!isset(static::$moduleName))
+		if (!empty(static::$moduleName))
 			return;
 
 		if (!Loader::includeModule(static::$moduleName))

@@ -45,11 +45,13 @@ class Blog extends Core
 
             $result = self::getStartResult($params['empty']);
 
-            $filter = $params['filter'];
-            if (isset($params['add_filter']))
-                $filter = array_merge($filter, $params['add_filter']);
+            $blogs      = \CBlog::GetList($params['order'],
+                $params['filter'],
+                false,
+                false,
+                $params['select']
+            );
 
-            $blogs      = \CBlog::GetList($params['order'], $filter, false, false, $params['select']);
             $elements   = array();
 
             while ($blog = $blogs->Fetch())

@@ -38,6 +38,7 @@ class Statistic extends Core
 		if (!is_null($referer2))
 			$filter['REFERER2'] = $referer2;
 
+        $is_filtered= null;
 		$companies  = \CAdv::GetSimpleList($by = "s_referer1", $order = "desc", $filter, $is_filtered);
 		$result     = array();
 

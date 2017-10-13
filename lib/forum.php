@@ -13,11 +13,19 @@ namespace Rover\Params;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
+/**
+ * Class Forum
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
 class Forum extends Core
 {
+    /**
+     * @var string
+     */
 	protected static $moduleName = 'forum';
 
-	protected static $groups;
 	/**
 	 * @param array $params
 	 * @return array|null
