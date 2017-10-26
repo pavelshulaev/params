@@ -14,6 +14,12 @@ use Bitrix\Main\ArgumentNullException;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
+/**
+ * Class Form
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
 class Form extends Core
 {
 	/**
@@ -56,8 +62,7 @@ class Form extends Core
             while ($question = $rsForms->Fetch())
                 $elements[] = $question;
 
-            $result = self::prepareResult($elements, key($params['template']),
-                $params['template'][key($params['template'])], $result);
+            $result = self::prepareResult($elements, $params['template'], $result);
 
             Cache::set($cacheKey, $result);
         }
@@ -109,8 +114,7 @@ class Form extends Core
             while ($question = $rsQuestions->Fetch())
                 $elements[] = $question;
 
-            $result = self::prepareResult($elements, key($params['template']),
-                $params['template'][key($params['template'])], $result);
+            $result = self::prepareResult($elements, $params['template'], $result);
 
             Cache::set($cacheKey, $result);
         }

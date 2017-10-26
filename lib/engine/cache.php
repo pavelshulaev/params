@@ -10,6 +10,12 @@
 
 namespace Rover\Params\Engine;
 
+/**
+ * Class Cache
+ *
+ * @package Rover\Params\Engine
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
 class Cache
 {
 	/**

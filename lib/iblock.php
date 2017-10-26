@@ -190,8 +190,7 @@ class Iblock extends Core
 					$preResult[] = $childSection;
 				}
 
-				$result = self::prepareResult($preResult, key($params['template']),
-					$params['template'][key($params['template'])], $result);
+				$result = self::prepareResult($preResult, $params['template'], $result);
 			}
 
 			Cache::set($cacheKey, $result);

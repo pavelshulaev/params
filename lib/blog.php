@@ -55,8 +55,7 @@ class Blog extends Core
             while ($blog = $blogs->Fetch())
                 $elements[] = $blog;
 
-            $result = self::prepareResult($elements, key($params['template']),
-                $params['template'][key($params['template'])], $result);
+            $result = self::prepareResult($elements, $params['template'], $result);
 
             Cache::set($cacheKey, $result);
         }

@@ -56,8 +56,7 @@ class Forum extends Core
 			while ($group = $groups->Fetch())
                 $elements[] = $group;
 
-            $result = self::prepareResult($elements, key($params['template']),
-                $params['template'][key($params['template'])], $result);
+            $result = self::prepareResult($elements, $params['template'], $result);
 
             Cache::set($cacheKey, $result);
 		}

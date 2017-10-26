@@ -17,6 +17,11 @@ use Bitrix\Main\DB\Result;
 
 class Core
 {
+    /**
+     * @var string|null
+     */
+    protected static $moduleName;
+
 	/**
 	 * @var array
 	 */
@@ -27,7 +32,9 @@ class Core
 		'method'    => '',
 		'filter'    => array(),
 		'add_filter'=> array(),
-		'order'     => array('SORT' => 'ASC')
+		'order'     => array('SORT' => 'ASC'),
+		'select'    => array(),
+		'reload'    => false
 		//'elements'  => array()
     );
 
@@ -38,7 +45,7 @@ class Core
 	 */
 	protected static function checkModule()
 	{
-		if (!isset(static::$moduleName))
+		if (empty(static::$moduleName))
 			return;
 
 		if (!Loader::includeModule(static::$moduleName))
@@ -57,29 +64,40 @@ class Core
 			if (!array_key_exists($key, $params))
 				$params[$key] = $default;
 
-		// fix template
-		$template       = $params['template'];
 
-		$keyTemplate    = key($template);
-		$nameTemplate   = $template[$keyTemplate];
-
-		if (empty($nameTemplate))
-			$params['template'] = array($keyTemplate => $keyTemplate);
-		elseif (empty($keyTemplate))
-			$params['template'] = array($nameTemplate => $nameTemplate);
-
-		// fix select
-		if (!isset($params['select']))
-			$params['select'] = self::getSelectFromTemplate($params['template']);
+		$params['template'] = self::prepareTemplate($params['template']);
+        $params['select']   = self::addSelectFromTemplate($params['select'], $params['template']);
 
 		// add_filter
-		if (isset($params['add_filter']))
-			$params['filter'] = array_replace($params['filter'], $params['add_filter']);
-
-		unset($params['add_filter']);
+		if (isset($params['add_filter'])){
+            $params['filter'] = array_replace($params['filter'], $params['add_filter']);
+            unset($params['add_filter']);
+		}
 
 		return $params;
 	}
+
+    /**
+     * @param $template
+     * @return array
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	protected static function prepareTemplate($template)
+    {
+        if (!is_array($template))
+            return array($template => $template);
+
+        $keyTemplate    = key($template);
+        $nameTemplate   = $template[$keyTemplate];
+
+        if (!empty($keyTemplate) && !empty($nameTemplate))
+            return $template;
+
+        if (empty($nameTemplate))
+            return array($keyTemplate => $keyTemplate);
+
+        return array($nameTemplate => $nameTemplate);
+    }
 
     /**
      * @param $empty
@@ -101,9 +119,8 @@ class Core
 	{
 		$params     = self::prepareParams($params);
 		$cacheKey   = Cache::getKey(serialize($params));
-		$reload     = isset($params['reload']) && $params['reload'];
 
-		if((false === (Cache::check($cacheKey))) || $reload)  {
+		if((false === (Cache::check($cacheKey))) || $params['reload'])  {
 
 			$result = self::getStartResult($params['empty']);
 			$class  = $params['class'];
@@ -127,8 +144,7 @@ class Core
 				return $result;
 
 			$elements   = $rcElements->fetchAll();
-			$result     = self::prepareResult($elements, key($params['template']),
-				$params['template'][key($params['template'])], $result);
+			$result     = self::prepareResult($elements, $params['template'], $result);
 
 			Cache::set($cacheKey, $result);
 		}
@@ -136,17 +152,19 @@ class Core
 		return Cache::get($cacheKey);
 	}
 
-	/**
-	 * @param $template
-	 * @return array
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
-	protected static function getSelectFromTemplate($template)
+    /**
+     * @param $select
+     * @param $template
+     * @return array
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	protected static function addSelectFromTemplate($select, $template)
 	{
 		$keyTemplate    = key($template);
 		$nameTemplate   = $template[$keyTemplate];
 
-		return array_unique(array_merge(self::getFieldsNames($keyTemplate),
+		return array_unique(array_merge($select,
+            self::getFieldsNames($keyTemplate),
 			self::getFieldsNames($nameTemplate)));
 	}
 
@@ -164,16 +182,18 @@ class Core
 			: array();
 	}
 
-	/**
-	 * @param array $elements
-	 * @param       $keyTemplate
-	 * @param       $nameTemplate
-	 * @param array $result
-	 * @return array
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
-	protected static function prepareResult(array $elements, $keyTemplate, $nameTemplate, array $result = array())
+    /**
+     * @param array $elements
+     * @param       $template
+     * @param array $result
+     * @return array
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	protected static function prepareResult(array $elements, $template, array $result = array())
 	{
+	    $keyTemplate    = key($template);
+        $nameTemplate   = $template[$keyTemplate];
+
 		$nameMask   = self::getMask($nameTemplate);
 		$keyMask    = self::getMask($keyTemplate);
 
@@ -202,7 +222,7 @@ class Core
 		foreach ($mask as $fieldTemplate => $fieldName)
 			$name = str_replace($fieldTemplate, $element[$fieldName], $name);
 
-		return $name;
+		return trim($name);
 	}
 
 	/**
@@ -236,6 +256,4 @@ class Core
 
 		return self::prepare($params);
 	}
-
-
 }
