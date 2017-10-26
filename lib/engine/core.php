@@ -15,7 +15,13 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\DB\Result;
 
-class Core
+/**
+ * Class Core
+ *
+ * @package Rover\Params\Engine
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
+abstract class Core
 {
     /**
      * @var string|null

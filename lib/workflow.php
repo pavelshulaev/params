@@ -41,12 +41,16 @@ class Workflow extends Core
         if (empty($params['filter']))
             $params['filter'] = array("ACTIVE" => "Y");
 
+        if (empty($params['template']))
+            $params['template'] = array("{ID}" => "[{ID}] {TITLE}");
+
         $params     = self::prepareParams($params);
         $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
 
         if ((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result = self::getStartResult($params['empty']);
+            $result     = self::getStartResult($params['empty']);
+            $is_filtered = null;
 
             $rsWFStatus = \CWorkflowStatus::GetList(
                 $by = key($params['order']),

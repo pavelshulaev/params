@@ -13,6 +13,12 @@ namespace Rover\Params;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
+/**
+ * Class Statistic
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
 class Statistic extends Core
 {
 	/**
