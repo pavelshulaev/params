@@ -36,7 +36,7 @@ class Statistic extends Core
         self::checkModule();
 
         if (empty($params['order']))
-            $params['order'] = array("s_referer1" => 'desc');
+            $params['order'] = array("s_referer1" => 'asc');
 
         if (empty($params['template']))
             $params['template'] = array(
