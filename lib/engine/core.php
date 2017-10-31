@@ -49,7 +49,7 @@ abstract class Core
 	 */
 	protected static function checkModule()
 	{
-		if (!empty(static::$moduleName))
+		if (empty(static::$moduleName))
 			return;
 
 		if (!Loader::includeModule(static::$moduleName))
