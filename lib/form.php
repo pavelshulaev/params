@@ -62,8 +62,7 @@ class Form extends Core
             while ($question = $rsForms->Fetch())
                 $elements[] = $question;
 
-            $result = self::prepareResult($elements, key($params['template']),
-                $params['template'][key($params['template'])], $result);
+            $result = self::prepareResult($elements, $params['template'], $result);
 
             Cache::set($cacheKey, $result);
         }
@@ -115,8 +114,7 @@ class Form extends Core
             while ($question = $rsQuestions->Fetch())
                 $elements[] = $question;
 
-            $result = self::prepareResult($elements, key($params['template']),
-                $params['template'][key($params['template'])], $result);
+            $result = self::prepareResult($elements, $params['template'], $result);
 
             Cache::set($cacheKey, $result);
         }
