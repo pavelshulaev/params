@@ -1,5 +1,6 @@
-# `\Rover\Params\Main` 
-## Списки параметров главного модуля 
+# Списки параметров главного модуля 
+`namespace \Rover\Params\Main`
+
 ### `public static function getSysGroups($hideAdmin = false, array $params = array())`
 Возвращает системные группы
 * `$hideAdmin` - скрывать ли группу администраторов (1) из результата

@@ -1,5 +1,6 @@
-# `\Rover\Params\Iblock`
-## Списки параметров инфоблоков
+# Списки параметров инфоблоков
+`namespace \Rover\Params\Iblock`
+
 ### `public static function getTypes(array $params = array())`
 Возвращает типы инфоблоков.
 ### `public static function getByType($type, $siteId = null, array $params = array())`

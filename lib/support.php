@@ -14,6 +14,12 @@ use Bitrix\Main\ArgumentNullException;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
+/**
+ * Class Support
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
 class Support extends Core
 {
     /**
@@ -89,10 +95,11 @@ class Support extends Core
     }
 
     /**
+     * @param array $params
      * @return null
      * @author Pavel Shulaev (https://rover-it.me)
      */
-    public static function getSla()
+    public static function getSla(array $params = array())
     {
         self::checkModule();
 
