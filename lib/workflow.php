@@ -13,6 +13,12 @@ namespace Rover\Params;
 use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
+/**
+ * Class Workflow
+ *
+ * @package Rover\Params
+ * @author  Pavel Shulaev (https://rover-it.me)
+ */
 class Workflow extends Core
 {
     /**
@@ -57,8 +63,7 @@ class Workflow extends Core
             while ($question = $rsWFStatus->Fetch())
                 $elements[] = $question;
 
-            $result = self::prepareResult($elements, key($params['template']),
-                $params['template'][key($params['template'])], $result);
+            $result = self::prepareResult($elements, $params['template'], $result);
 
             Cache::set($cacheKey, $result);
         }
