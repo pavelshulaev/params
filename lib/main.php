@@ -11,6 +11,7 @@
 namespace Rover\Params;
 
 use Bitrix\Main\ArgumentNullException;
+use Rover\Params\Engine\Cache;
 use Rover\Params\Engine\Core;
 
 /**
@@ -45,6 +46,52 @@ class Main extends Core
 
 		return self::prepare($params);
 	}
+
+    /**
+     * @param       $entityId
+     * @param array $params
+     * @return null
+     * @throws ArgumentNullException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	public static function getUserFields($entityId, array $params = array())
+    {
+        $entityId = trim($entityId);
+        if (!strlen($entityId))
+            throw new ArgumentNullException('entityId');
+
+        if (!isset($params['template']))
+            $params['template'] = array('{ID}' => '[{ID}] {EDIT_FORM_LABEL}');
+
+        $params     = self::prepareParams($params);
+        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
+
+        if((false === (Cache::check($cacheKey))) || $params['reload']) {
+
+            $result = self::getStartResult($params['empty']);
+
+            $itemId = isset($params['filter']['ITEM_ID'])
+                ? $params['filter']['ITEM_ID']
+                : 0;
+
+            $langId = isset($params['filter']['LANG_ID'])
+                ? $params['filter']['LANG_ID']
+                : false;
+
+            $userId = isset($params['filter']['USER_ID'])
+                ? $params['filter']['USER_ID']
+                : false;
+
+            global $USER_FIELD_MANAGER;
+            $arrUF = $USER_FIELD_MANAGER->GetUserFields($entityId, $itemId, $langId, $userId);
+
+            $result = self::prepareResult($arrUF, $params['template'], $result);
+
+            Cache::set($cacheKey, $result);
+        }
+
+        return Cache::get($cacheKey);
+    }
 
 	/**
 	 * @param            $userId
