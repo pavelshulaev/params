@@ -224,4 +224,37 @@ class Main extends Core
 
         return self::prepare($params);
     }
+
+    /**
+     * @param       $groupsIds
+     * @param array $params
+     * @return array|null
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+    public static function getGroupUsers($groupsIds, array $params)
+    {
+        if (empty($groupsIds))
+            return array();
+
+        if (!is_array($groupsIds))
+            $groupsIds = array($groupsIds);
+
+        $cacheKey = Cache::getKey(__METHOD__, serialize($groupsIds));
+
+        if((false === (Cache::check($cacheKey))) || $params['reload']) {
+
+            $usersIds = array();
+            foreach ($groupsIds as $groupId)
+                $usersIds = array_merge($usersIds, \CGroup::GetGroupUser($groupId));
+
+            $usersIds = array_unique($usersIds);
+
+            Cache::set($cacheKey, $usersIds);
+        }
+
+        $usersIds               = Cache::get($cacheKey);
+        $params['add_filter']   = array('=ID' => $usersIds);
+
+        return self::getUsers($params);
+    }
 }
