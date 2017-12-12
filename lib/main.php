@@ -94,14 +94,15 @@ class Main extends Core
         return Cache::get($cacheKey);
     }
 
-	/**
-	 * @param            $userId
-	 * @param bool|false $hideAdmin
-	 * @param array      $params
-	 * @return array|null
-	 * @throws ArgumentNullException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param       $userId
+     * @param bool  $hideAdmin
+     * @param array $params
+     * @return array|null
+     * @throws ArgumentNullException
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getUserSysGroups($userId, $hideAdmin = false, array $params = array())
 	{
 		$userId = intval($userId);
@@ -116,12 +117,13 @@ class Main extends Core
 		return self::getSysGroups($hideAdmin, $params);
 	}
 
-	/**
-	 * @param string $lid
-	 * @param array  $params
-	 * @return array|null
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param string $lid
+     * @param array  $params
+     * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getEventTypes($lid = 'ru', array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\Mail\Internal\EventTypeTable';
@@ -137,10 +139,11 @@ class Main extends Core
 	}
 
     /**
-     * @param null   $eventName
      * @param string $siteId
+     * @param null   $eventName
      * @param array  $params
      * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
      * @author Pavel Shulaev (https://rover-it.me)
      */
 	public static function getEventMessages($siteId = '', $eventName = null, array $params = array())
@@ -167,11 +170,13 @@ class Main extends Core
         return self::prepare($params);
 	}
 
-	/**
-	 * @param $params
-	 * @return array|null
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+
+    /**
+     * @param array $params
+     * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getSites(array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\SiteTable';
@@ -183,11 +188,12 @@ class Main extends Core
 		return self::prepare($params);
 	}
 
-	/**
-	 * @param array $params
-	 * @return array|null
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param array $params
+     * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getUsers(array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\UserTable';
@@ -205,8 +211,8 @@ class Main extends Core
     /**
      * @param       $object
      * @param array $params
-     * @return array
-     * @throws ArgumentNullException
+     * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
      * @author Pavel Shulaev (https://rover-it.me)
      */
 	public static function getUserType($object, array $params = array())

@@ -5,6 +5,11 @@ use Bitrix\Main\ModuleManager;
 
 Loc::LoadMessages(__FILE__);
 
+/**
+ * Class rover_params
+ *
+ * @author Pavel Shulaev (https://rover-it.me)
+ */
 class rover_params extends CModule
 {
     var $MODULE_ID	= "rover.params";
@@ -13,20 +18,24 @@ class rover_params extends CModule
     var $MODULE_NAME;
     var $MODULE_DESCRIPTION;
     var $MODULE_CSS;
-	
+
+    /**
+     * rover_params constructor.
+     */
     function __construct()
     {
-        global $errors;
+        global $paramsErrors;
 
-		$arModuleVersion = array();
+		$arModuleVersion    = array();
+        $paramsErrors       = array();
 
-        require(__DIR__ . "/version.php");
+        require dirname(__FILE__) . "/version.php";
 
 		if (is_array($arModuleVersion) && array_key_exists("VERSION", $arModuleVersion)) {
 			$this->MODULE_VERSION		= $arModuleVersion["VERSION"];
 			$this->MODULE_VERSION_DATE	= $arModuleVersion["VERSION_DATE"];
         } else
-            $errors[] = Loc::getMessage('rover_params__version_info_error');
+            $paramsErrors[] = Loc::getMessage('rover_params__version_info_error');
 
         $this->MODULE_NAME			= Loc::getMessage('rover_params__name');
         $this->MODULE_DESCRIPTION	= Loc::getMessage('rover_params__descr');
@@ -35,7 +44,7 @@ class rover_params extends CModule
 	}
 
     /**
-     * @author Shulaev (pavel.shulaev@gmail.com)
+     * @author Pavel Shulaev (https://rover-it.me)
      */
     function DoInstall()
     {
@@ -47,7 +56,7 @@ class rover_params extends CModule
 	}
 
     /**
-     * @author Shulaev (pavel.shulaev@gmail.com)
+     * @author Pavel Shulaev (https://rover-it.me)
      */
     function DoUninstall()
     {
@@ -60,7 +69,7 @@ class rover_params extends CModule
 
     /**
      * @return array
-     * @author Shulaev (pavel.shulaev@gmail.com)
+     * @author Pavel Shulaev (https://rover-it.me)
      */
     function GetModuleRightsList()
     {
@@ -75,26 +84,24 @@ class rover_params extends CModule
     }
 
 	/**
-	 * »нсталл€ци€ файлов и зависимотей, регистраци€ модул€
-	 * @author Shulaev (pavel.shulaev@gmail.com)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	private function ProcessInstall()
     {
-        global $APPLICATION, $errors;
+        global $APPLICATION, $paramsErrors;
 
-        if (PHP_VERSION_ID < 50400)
-            $errors[] = Loc::getMessage('rover_params__php_version_error');
+        if (PHP_VERSION_ID < 50306)
+            $paramsErrors[] = Loc::getMessage('rover_params__php_version_error');
 
-        if (empty($errors))
+        if (empty($paramsErrors))
             ModuleManager::registerModule($this->MODULE_ID);
 
 	    $APPLICATION->IncludeAdminFile(Loc::getMessage("rover_params__install_title"),
-            $_SERVER['DOCUMENT_ROOT'] . getLocalPath("modules/". $this->MODULE_ID ."/install/message.php"));
+            dirname(__FILE__) . '/message.php');
     }
 
 	/**
-	 * ”даление файлов и зависимостей. —н€тие модул€ с регистрации
-	 * @author Shulaev (pavel.shulaev@gmail.com)
+	 * @author Pavel Shulaev (https://rover-it.me)
 	 */
 	private function ProcessUninstall()
 	{
@@ -102,6 +109,6 @@ class rover_params extends CModule
 
         global $APPLICATION;
         $APPLICATION->IncludeAdminFile(Loc::getMessage("rover_params__uninstall_title"),
-            $_SERVER['DOCUMENT_ROOT'] . getLocalPath("modules/". $this->MODULE_ID ."/install/unMessage.php"));
+            dirname(__FILE__) . '/unMessage.php');
 	}
 }

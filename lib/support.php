@@ -30,6 +30,9 @@ class Support extends Core
     /**
      * @param array $params
      * @return null
+     * @throws ArgumentNullException
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
      * @author Pavel Shulaev (https://rover-it.me)
      */
     public static function getCategory(array $params = array())
@@ -40,6 +43,9 @@ class Support extends Core
     /**
      * @param array $params
      * @return null
+     * @throws ArgumentNullException
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
      * @author Pavel Shulaev (https://rover-it.me)
      */
     public static function getCriticality(array $params = array())
@@ -52,6 +58,8 @@ class Support extends Core
      * @param array $params
      * @return null
      * @throws ArgumentNullException
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
      * @author Pavel Shulaev (https://rover-it.me)
      */
     public static function getDictionaryByType($type, array $params = array())
@@ -97,6 +105,8 @@ class Support extends Core
     /**
      * @param array $params
      * @return null
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
      * @author Pavel Shulaev (https://rover-it.me)
      */
     public static function getSla(array $params = array())
