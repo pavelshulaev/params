@@ -1,15 +1,15 @@
 <?php
 use Bitrix\Main\Localization\Loc;
 
-global $APPLICATION, $errors;
+global $APPLICATION, $paramsErrors;
 
-if (!$errors)
+if (!$paramsErrors)
 {
     echo CAdminMessage::ShowNote(Loc::getMessage("MOD_UNINST_OK"));
 }
 else
 {
-    $details = implode("<br/>", $errors);
+    $details = implode("<br/>", $paramsErrors);
     echo CAdminMessage::ShowMessage(
         Array(
             "TYPE"=>"ERROR",
