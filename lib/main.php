@@ -27,12 +27,13 @@ class Main extends Core
 	 */
 	protected static $currentSiteId;
 
-	/**
-	 * @param bool|false $hideAdmin
-	 * @param array      $params
-	 * @return array|null
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param bool  $hideAdmin
+     * @param array $params
+     * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getSysGroups($hideAdmin = false, array $params = array())
 	{
 		$params['class']    = '\Bitrix\Main\GroupTable';

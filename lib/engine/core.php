@@ -138,7 +138,8 @@ abstract class Core
 			$query = array(
 				'filter'    => $params['filter'],
 				'select'    => $params['select'],
-				'order'     => $params['order']
+				'order'     => $params['order'],
+                'cache'     => array('ttl' => 3600)
             );
 			/**
 			 * @var Result $rcElements
