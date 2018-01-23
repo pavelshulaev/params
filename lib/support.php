@@ -122,7 +122,7 @@ class Support extends Core
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
             $result     = self::getStartResult($params['empty']);
-            $dbelements = \CTicketSLA::GetList($params['order'], $params['filter']);
+            $dbelements = \CTicketSLA::GetList($params['order'], $params['filter'], $is_filtered);
             $elements   = array();
 
             while ($group = $dbelements->Fetch())

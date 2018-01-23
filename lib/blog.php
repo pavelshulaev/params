@@ -29,6 +29,8 @@ class Blog extends Core
     /**
      * @param array $params
      * @return null
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
      * @author Pavel Shulaev (https://rover-it.me)
      */
     public static function getBlogs(array $params = array())

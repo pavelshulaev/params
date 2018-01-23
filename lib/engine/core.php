@@ -115,12 +115,11 @@ abstract class Core
         return is_null($empty) ? array() : array(0 => $empty);
     }
 
-	/**
-	 * @param array $params
-	 * @return array|null
-	 * @throws ArgumentOutOfRangeException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param array $params
+     * @return array|null
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	protected static function prepare(array $params = array())
 	{
 		$params     = self::prepareParams($params);
@@ -252,11 +251,12 @@ abstract class Core
 		return $mask;
 	}
 
-	/**
-	 * @param array $params
-	 * @return array|null
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param array $params
+     * @return array|null
+     * @throws ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	protected static function prepareEmpty(array $params = array())
 	{
 		$params['elements'] = array();
