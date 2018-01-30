@@ -48,11 +48,36 @@ class Support extends Core
      * @throws \Bitrix\Main\SystemException
      * @author Pavel Shulaev (https://rover-it.me)
      */
+    public static function getStatus(array $params = array())
+    {
+        return self::getDictionaryByType('S', $params);
+    }
+
+    /**
+     * @param array $params
+     * @return null
+     * @throws ArgumentNullException
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
     public static function getCriticality(array $params = array())
     {
         return self::getDictionaryByType('K', $params);
     }
 
+    /**
+     * @param array $params
+     * @return null
+     * @throws ArgumentNullException
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+    public static function getSource(array $params = array())
+    {
+        return self::getDictionaryByType('SR', $params);
+    }
     /**
      * @param       $type
      * @param array $params
@@ -89,7 +114,7 @@ class Support extends Core
                 $is_filtered
             );
 
-            $elements   = array();
+            $elements = array();
 
             while ($group = $dbelements->Fetch())
                 $elements[] = $group;
