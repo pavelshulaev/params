@@ -77,7 +77,7 @@ class Main extends Core
 
             $langId = isset($params['filter']['LANG_ID'])
                 ? $params['filter']['LANG_ID']
-                : false;
+                : LANGUAGE_ID;
 
             $userId = isset($params['filter']['USER_ID'])
                 ? $params['filter']['USER_ID']
