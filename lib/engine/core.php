@@ -143,7 +143,6 @@ abstract class Core
 			if (Dependence::d7CacheAvailable())
                 $query['cache'] = array('ttl' => 3600);
 
-			pr($query); die();
 			/**
 			 * @var Result $rcElements
 			 */
