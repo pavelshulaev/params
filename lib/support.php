@@ -160,4 +160,49 @@ class Support extends Core
 
         return Cache::get($cacheKey);
     }
+
+    /**
+     * @param $params
+     * @return null
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+    public static function getSupportTeam(array $params = array())
+    {
+        self::checkModule();
+
+        if (empty($params['order']))
+            $params['order'] = array("REFERENCE_ID" => 'ASC');
+
+        if (empty($params['template']))
+            $params['template'] = array('{REFERENCE_ID}' => '{REFERENCE}');
+
+        if (empty($params['filter']))
+            $params['filter']['ACTIVE'] = 'Y';
+
+        $params     = self::prepareParams($params);
+        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
+
+        if((false === (Cache::check($cacheKey))) || $params['reload']) {
+
+            $result     = self::getStartResult($params['empty']);
+            $dbelements = \CTicket::GetSupportTeamList();
+            $elements   = array();
+
+            while ($supportMan = $dbelements->Fetch()) {
+                if (isset($params['filter']['ACTIVE'])
+                    && $supportMan['ACTIVE'] != $params['filter']['ACTIVE'])
+                    continue;
+
+                $elements[] = $supportMan;
+            }
+
+            $result = self::prepareResult($elements, $params['template'], $result);
+
+            Cache::set($cacheKey, $result);
+        }
+
+        return Cache::get($cacheKey);
+    }
 }
