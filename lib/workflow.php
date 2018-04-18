@@ -26,11 +26,13 @@ class Workflow extends Core
      */
 	protected static $moduleName = 'workflow';
 
-	/**
-	 * @param array $params
-	 * @return array
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param array $params
+     * @return null
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getStatuses(array $params = array())
 	{
 		self::checkModule();
@@ -52,6 +54,7 @@ class Workflow extends Core
             $result     = self::getStartResult($params['empty']);
             $is_filtered = null;
 
+            /** @var \CDBResult $rsWFStatus */
             $rsWFStatus = \CWorkflowStatus::GetList(
                 $by = key($params['order']),
                 $order = $params['order'][$by],
