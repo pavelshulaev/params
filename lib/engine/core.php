@@ -138,8 +138,11 @@ abstract class Core
 				'filter'    => $params['filter'],
 				'select'    => $params['select'],
 				'order'     => $params['order'],
-                'cache'     => array('ttl' => 3600)
             );
+
+			if (Dependence::d7CacheAvailable())
+                $query['cache'] = array('ttl' => 3600);
+
 			/**
 			 * @var Result $rcElements
 			 */
