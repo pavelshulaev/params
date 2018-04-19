@@ -45,21 +45,14 @@ class Blog extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result = self::getStartResult($params['empty']);
-
-            $blogs      = \CBlog::GetList($params['order'],
+            $blogs  = \CBlog::GetList($params['order'],
                 $params['filter'],
                 false,
                 false,
                 $params['select']
             );
 
-            $elements   = array();
-
-            while ($blog = $blogs->Fetch())
-                $elements[] = $blog;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareDBResult($blogs, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }

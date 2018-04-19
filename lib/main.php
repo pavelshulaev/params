@@ -69,8 +69,6 @@ class Main extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result = self::getStartResult($params['empty']);
-
             $itemId = isset($params['filter']['ITEM_ID'])
                 ? $params['filter']['ITEM_ID']
                 : 0;
@@ -86,7 +84,7 @@ class Main extends Core
             global $USER_FIELD_MANAGER;
             $arrUF = $USER_FIELD_MANAGER->GetUserFields($entityId, $itemId, $langId, $userId);
 
-            $result = self::prepareResult($arrUF, $params['template'], $result);
+            $result = self::prepareArrayResult($arrUF, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }

@@ -50,20 +50,13 @@ class Statistic extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result     = self::getStartResult($params['empty']);
-
-            $groups     = $companies  = \CAdv::GetSimpleList(
+            $groups = $companies  = \CAdv::GetSimpleList(
                 $by = key($params['order']),
                 $order = $params['order'][$by],
                 $params['filter'],
                 $is_filtered
             );
-            $elements   = array();
-
-            while ($group = $groups->Fetch())
-                $elements[] = $group;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareDBResult($groups, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }
@@ -91,19 +84,13 @@ class Statistic extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result     = self::getStartResult($params['empty']);
-            $groups     = $companies  = \CStatEventType::GetList(
+            $groups = $companies  = \CStatEventType::GetList(
                 $by = key($params['order']),
                 $order = $params['order'][$by],
                 $params['filter'],
                 $is_filtered
             );
-            $elements   = array();
-
-            while ($group = $groups->Fetch())
-                $elements[] = $group;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareDBResult($groups, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }

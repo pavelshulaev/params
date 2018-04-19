@@ -14,7 +14,7 @@ use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\Loader;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\DB\Result;
-
+use \Bitrix\Main\Entity\DataManager;
 /**
  * Class Core
  *
@@ -70,7 +70,6 @@ abstract class Core
 			if (!array_key_exists($key, $params))
 				$params[$key] = $default;
 
-
 		$params['template'] = self::prepareTemplate($params['template']);
         $params['select']   = self::addSelectFromTemplate($params['select'], $params['template']);
 
@@ -118,6 +117,7 @@ abstract class Core
     /**
      * @param array $params
      * @return array|null
+     * @throws ArgumentOutOfRangeException
      * @author Pavel Shulaev (https://rover-it.me)
      */
 	protected static function prepare(array $params = array())
@@ -126,13 +126,12 @@ abstract class Core
 		$cacheKey   = Cache::getKey(serialize($params));
 
 		if((false === (Cache::check($cacheKey))) || $params['reload'])  {
-
-			$result = self::getStartResult($params['empty']);
+            /** @var DataManager $class */
 			$class  = $params['class'];
 			$method = $params['method'];
 
 			if (!method_exists($class, $method))
-				return $result;
+				return self::getStartResult($params['empty']);
 
 			$query = array(
 				'filter'    => $params['filter'],
@@ -140,20 +139,19 @@ abstract class Core
 				'order'     => $params['order'],
             );
 
-			if (Dependence::d7CacheAvailable())
+			if (Dependence::d7CacheAvailable()) {
+
+                if ($params['reload'])
+                    $class::getEntity()->cleanCache();
+
                 $query['cache'] = array('ttl' => 3600);
+            }
 
 			/**
 			 * @var Result $rcElements
 			 */
 			$rcElements = $class::$method($query);
-
-			// check if empty result
-			if (!$rcElements->getSelectedRowsCount())
-				return $result;
-
-			$elements   = $rcElements->fetchAll();
-			$result     = self::prepareResult($elements, $params['template'], $result);
+			$result     = self::prepareDBResult($rcElements, $params['template'], $params['empty']);
 
 			Cache::set($cacheKey, $result);
 		}
@@ -194,17 +192,19 @@ abstract class Core
     /**
      * @param array $elements
      * @param       $template
-     * @param array $result
+     * @param null  $empty
      * @return array
      * @author Pavel Shulaev (https://rover-it.me)
      */
-	protected static function prepareResult(array $elements, $template, array $result = array())
+	protected static function prepareArrayResult(array $elements, $template, $empty = null)
 	{
 	    $keyTemplate    = key($template);
         $nameTemplate   = $template[$keyTemplate];
 
 		$nameMask   = self::getMask($nameTemplate);
 		$keyMask    = self::getMask($keyTemplate);
+
+        $result = self::getStartResult($empty);
 
 		foreach ($elements as $element)
 		{
@@ -216,6 +216,29 @@ abstract class Core
 
 		return $result;
 	}
+
+    /**
+     * @param      $dbResult
+     * @param      $template
+     * @param null $empty
+     * @return array
+     * @throws ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	protected static function prepareDBResult($dbResult, $template, $empty = null)
+    {
+        if ($dbResult instanceof \CDBResult) {
+            $elements = array();
+            while ($row = $dbResult->Fetch())
+                $elements[] = $row;
+        } elseif ($dbResult instanceof Result) {
+            $elements = $dbResult->fetchAll();
+        } else {
+            throw new ArgumentOutOfRangeException('dbResult');
+        }
+
+        return self::prepareArrayResult($elements, $template, $empty);
+    }
 
 	/**
 	 * @param $element

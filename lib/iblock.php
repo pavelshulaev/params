@@ -30,13 +30,13 @@ class Iblock extends Core
 	 */
 	protected static $moduleName = 'iblock';
 
-	/**
-	 * @param array $params
-	 * @return array|null
-	 * @throws SystemException
-	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param array $params
+     * @return array|null
+     * @throws SystemException
+     * @throws \Bitrix\Main\LoaderException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getTypes(array $params = array())
 	{
 		self::checkModule();
@@ -53,15 +53,16 @@ class Iblock extends Core
 		return self::prepare($params);
 	}
 
-	/**
-	 * @param      $type
-	 * @param null $siteId
-	 * @param      $params
-	 * @return array|null
-	 * @throws SystemException
-	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param null  $type
+     * @param null  $siteId
+     * @param array $params
+     * @return array|null
+     * @throws SystemException
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @throws \Bitrix\Main\LoaderException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getByType($type = null, $siteId = null, array $params = array())
 	{
 		self::checkModule();
@@ -98,6 +99,7 @@ class Iblock extends Core
     /**
      * @param $siteId
      * @return array
+     * @throws \Bitrix\Main\Db\SqlQueryException
      * @author Pavel Shulaev (https://rover-it.me)
      */
 	protected static function getIblocksIdsBySiteId($siteId)
@@ -117,15 +119,17 @@ class Iblock extends Core
         return $result;
     }
 
-	/**
-	 * @param           $iblockId
-	 * @param bool|true $withSubsections
-	 * @param array     $params
-	 * @return array|null
-	 * @throws SystemException
-	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param       $iblockId
+     * @param bool  $withSubsections
+     * @param array $params
+     * @return array|null
+     * @throws SystemException
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @throws \Bitrix\Main\LoaderException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getSections($iblockId, $withSubsections = true, array $params = array())
 	{
 		self::checkModule();
@@ -156,8 +160,6 @@ class Iblock extends Core
 		$cacheKey = Cache::getKey(__METHOD__, serialize($params));
 
 		if((false === (Cache::check($cacheKey))) || $params['reload']) {
-
-            $result = self::getStartResult($params['empty']);
 
 			$query = array(
 				'filter'    => $params['filter'],
@@ -191,7 +193,7 @@ class Iblock extends Core
 					$preResult[] = $childSection;
 				}
 
-				$result = self::prepareResult($preResult, $params['template'], $result);
+				$result = self::prepareArrayResult($preResult, $params['template'], $params['empty']);
 			}
 
 			Cache::set($cacheKey, $result);
@@ -199,16 +201,17 @@ class Iblock extends Core
 
 		return Cache::get($cacheKey);
 	}
-	
-	/**
-	 * @param      $iblockId
-	 * @param null $sectionId
-	 * @param      $params
-	 * @return array|null
-	 * @throws SystemException
-	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+
+    /**
+     * @param       $iblockId
+     * @param null  $sectionId
+     * @param array $params
+     * @return array|null
+     * @throws SystemException
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @throws \Bitrix\Main\LoaderException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getElements($iblockId, $sectionId = null, array $params = array())
 	{
 		self::checkModule();
@@ -234,14 +237,15 @@ class Iblock extends Core
 		return self::prepare($params);
 	}
 
-	/**
-	 * @param $iblockId
-	 * @param $params
-	 * @return array|null
-	 * @throws SystemException
-	 * @throws \Bitrix\Main\ArgumentException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param       $iblockId
+     * @param array $params
+     * @return array|null
+     * @throws SystemException
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @throws \Bitrix\Main\LoaderException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getProps($iblockId, array $params = array())
 	{
 		self::checkModule();

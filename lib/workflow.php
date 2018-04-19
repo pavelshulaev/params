@@ -51,7 +51,6 @@ class Workflow extends Core
 
         if ((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result     = self::getStartResult($params['empty']);
             $is_filtered = null;
 
             /** @var \CDBResult $rsWFStatus */
@@ -60,13 +59,7 @@ class Workflow extends Core
                 $order = $params['order'][$by],
                 $params['filter'],
                 $is_filtered);
-
-            $elements   = array();
-
-            while ($question = $rsWFStatus->Fetch())
-                $elements[] = $question;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareDBResult($rsWFStatus, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }

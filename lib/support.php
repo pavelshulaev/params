@@ -105,21 +105,13 @@ class Support extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result     = self::getStartResult($params['empty']);
-
             $dbelements = \CTicketDictionary::GetList(
                 $by = key($params['order']),
                 $order = $params['order'][$by],
                 $params['filter'],
                 $is_filtered
             );
-
-            $elements = array();
-
-            while ($group = $dbelements->Fetch())
-                $elements[] = $group;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareDBResult($dbelements, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }
@@ -146,14 +138,8 @@ class Support extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result     = self::getStartResult($params['empty']);
             $dbelements = \CTicketSLA::GetList($params['order'], $params['filter'], $is_filtered);
-            $elements   = array();
-
-            while ($group = $dbelements->Fetch())
-                $elements[] = $group;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result     = self::prepareDBResult($dbelements, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }
@@ -186,7 +172,6 @@ class Support extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result     = self::getStartResult($params['empty']);
             $dbelements = \CTicket::GetSupportTeamList();
             $elements   = array();
 
@@ -198,7 +183,7 @@ class Support extends Core
                 $elements[] = $supportMan;
             }
 
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareArrayResult($elements, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }

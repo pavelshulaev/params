@@ -27,12 +27,14 @@ class Form extends Core
 	 */
 	protected static $moduleName = 'form';
 
-	/**
-	 * @param array $params
-	 * @return mixed
-	 * @throws \Bitrix\Main\SystemException
-	 * @author Pavel Shulaev (https://rover-it.me)
-	 */
+    /**
+     * @param array $params
+     * @return null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
 	public static function getWebForms(array $params = array())
 	{
 		self::checkModule();
@@ -48,8 +50,6 @@ class Form extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result = self::getStartResult($params['empty']);
-
             $rsForms = \CForm::GetList(
                 $by = key($params['order']),
                 $order = $params['order'][$by],
@@ -57,12 +57,7 @@ class Form extends Core
                 $is_filtered
             );
 
-            $elements = array();
-
-            while ($question = $rsForms->Fetch())
-                $elements[] = $question;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareDBResult($rsForms, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }
@@ -96,8 +91,6 @@ class Form extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result = self::getStartResult($params['empty']);
-
             $is_filtered = null;
 
             $rsQuestions = \CFormField::GetList(
@@ -109,12 +102,7 @@ class Form extends Core
                 $is_filtered
             );
 
-            $elements   = array();
-
-            while ($question = $rsQuestions->Fetch())
-                $elements[] = $question;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+            $result = self::prepareDBResult($rsQuestions, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }

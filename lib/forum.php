@@ -56,15 +56,8 @@ class Forum extends Core
 
         if((false === (Cache::check($cacheKey))) || $params['reload']) {
 
-            $result = self::getStartResult($params['empty']);
-
-			$groups     = \CForumGroup::GetList($params['order'], $params['filter']);
-            $elements   = array();
-
-			while ($group = $groups->Fetch())
-                $elements[] = $group;
-
-            $result = self::prepareResult($elements, $params['template'], $result);
+			$groups = \CForumGroup::GetList($params['order'], $params['filter']);
+            $result = self::prepareDBResult($groups, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
 		}

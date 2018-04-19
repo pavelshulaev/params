@@ -8,8 +8,6 @@ namespace Rover\Params\Engine;
  *
  * @author Pavel Shulaev (https://rover-it.me)
  */
-use Bitrix\Main\Application;
-use Bitrix\Main\Loader;
 use \Bitrix\Main\ModuleManager;
 use \Bitrix\Main\Localization\Loc;
 
