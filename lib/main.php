@@ -22,11 +22,6 @@ use Rover\Params\Engine\Core;
  */
 class Main extends Core
 {
-	/**
-	 * @var
-	 */
-	protected static $currentSiteId;
-
     /**
      * @param bool  $hideAdmin
      * @param array $params
@@ -49,11 +44,32 @@ class Main extends Core
 	}
 
     /**
+     * @param array $params
+     * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	public static function getUF(array $params = array())
+    {
+        $params['class']    = '\Bitrix\Main\UserFieldTable';
+        $params['method']   = 'getList';
+
+        if (!isset($params['template']))
+            $params['template'] = array('{ID}' => '[{ID}] {FIELD_NAME}');
+
+        if (!isset($params['order']))
+            $params['order'] = array('ID' => 'ASC');
+
+        return self::prepare($params);
+    }
+
+    /**
      * @param       $entityId
      * @param array $params
      * @return null
      * @throws ArgumentNullException
      * @author Pavel Shulaev (https://rover-it.me)
+     * @deprecated
      */
 	public static function getUserFields($entityId, array $params = array())
     {
@@ -84,7 +100,46 @@ class Main extends Core
             global $USER_FIELD_MANAGER;
             $arrUF = $USER_FIELD_MANAGER->GetUserFields($entityId, $itemId, $langId, $userId);
 
+            // filter
+            foreach ($params['filter'] as $filterKey => $filterValue)
+            {
+                if (in_array($filterKey, ['ITEM_ID', 'LANG_ID', 'USER_ID'])) continue;
+
+                foreach ($arrUF as $ufKey => $uf) {
+                    if (!isset($uf[$filterKey])
+                        || ($uf[$filterKey] != $filterValue))
+                        unset($arrUF[$ufKey]);
+                }
+            }
+
             $result = self::prepareArrayResult($arrUF, $params['template'], $params['empty']);
+
+            Cache::set($cacheKey, $result);
+        }
+
+        return Cache::get($cacheKey);
+    }
+
+    /**
+     * @param array $params
+     * @return null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+    public static function getUFEnumValues(array $params = array())
+    {
+        if (!isset($params['template']))
+            $params['template'] = array('{ID}' => '[{ID}] {VALUE}');
+
+        if (empty($params['order']))
+            $params['order'] = array('ID' => 'ASC');
+
+        $params     = self::prepareParams($params);
+        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
+
+        if((false === (Cache::check($cacheKey))) || $params['reload']) {
+            $dbValues   = \CUserFieldEnum::GetList($params['order'], $params['filter']);
+            $result     = self::prepareDBResult($dbValues, $params['template'], $params['empty']);
 
             Cache::set($cacheKey, $result);
         }
@@ -137,18 +192,36 @@ class Main extends Core
 	}
 
     /**
+     * @param array $params
+     * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	public static function getMailEventMessages(array $params = array())
+    {
+        $params['class']    = '\Bitrix\Main\Mail\Internal\EventMessageTable';
+        $params['method']   = 'getList';
+
+        if (!isset($params['template']))
+            $params['template'] = array('{ID}' => '[{EVENT_NAME}] {SUBJECT}');
+
+        if (!isset($params['order']))
+            $params['order'] = array('EVENT_NAME' => 'asc');
+
+        return self::prepare($params);
+    }
+
+    /**
      * @param string $siteId
      * @param null   $eventName
      * @param array  $params
      * @return array|null
      * @throws \Bitrix\Main\ArgumentOutOfRangeException
      * @author Pavel Shulaev (https://rover-it.me)
+     * @deprecated
      */
 	public static function getEventMessages($siteId = '', $eventName = null, array $params = array())
 	{
-        $params['class']    = '\Bitrix\Main\Mail\Internal\EventMessageTable';
-        $params['method']   = 'getList';
-
         if (!isset($params['filter']))
             $params['filter'] = array();
 
@@ -159,13 +232,11 @@ class Main extends Core
         if ($siteId)
             $params['filter']['=LID'] = $siteId;
 
-        if (!isset($params['template']))
-            $params['template'] = array('{ID}' => '[{EVENT_NAME}] {SUBJECT}');
-
+        /** @wtf ?! */
         if (!isset($params['sort']))
             $params['order'] = array('EVENT_NAME' => 'asc');
 
-        return self::prepare($params);
+        return self::getMailEventMessages($params);
 	}
 
 
@@ -212,6 +283,7 @@ class Main extends Core
      * @return array|null
      * @throws \Bitrix\Main\ArgumentOutOfRangeException
      * @author Pavel Shulaev (https://rover-it.me)
+     * @deprecated use getUF
      */
 	public static function getUserType($object, array $params = array())
     {
@@ -234,6 +306,7 @@ class Main extends Core
      * @param       $groupsIds
      * @param array $params
      * @return array|null
+     * @throws \Bitrix\Main\ArgumentOutOfRangeException
      * @author Pavel Shulaev (https://rover-it.me)
      */
     public static function getGroupUsers($groupsIds, array $params)
