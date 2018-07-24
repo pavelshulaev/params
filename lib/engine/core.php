@@ -118,12 +118,18 @@ abstract class Core
      * @param array $params
      * @return array|null
      * @throws ArgumentOutOfRangeException
+     * @throws SystemException
+     * @throws \Bitrix\Main\ArgumentException
      * @author Pavel Shulaev (https://rover-it.me)
      */
 	protected static function prepare(array $params = array())
 	{
-		$params     = self::prepareParams($params);
-		$cacheKey   = Cache::getKey(serialize($params));
+		$params = self::prepareParams($params);
+		if (!isset($params['class'])
+            || !isset($params['method']))
+		    return self::getStartResult($params['empty']);
+
+		$cacheKey = Cache::getKey(serialize($params));
 
 		if((false === (Cache::check($cacheKey))) || $params['reload'])  {
             /** @var DataManager $class */
