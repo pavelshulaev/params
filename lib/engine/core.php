@@ -23,14 +23,10 @@ use \Bitrix\Main\Entity\DataManager;
  */
 abstract class Core
 {
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected static $moduleName;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected static $defaults = array(
 		'empty'     => '-',
 		'template'  => array('{ID}' => '[{ID}] {NAME}'),
@@ -153,9 +149,7 @@ abstract class Core
                 $query['cache'] = array('ttl' => 3600);
             }
 
-			/**
-			 * @var Result $rcElements
-			 */
+			/** @var Result $rcElements */
 			$rcElements = $class::$method($query);
 			$result     = self::prepareDBResult($rcElements, $params['template'], $params['empty']);
 
