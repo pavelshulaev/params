@@ -37,7 +37,6 @@ abstract class Core
 		'order'     => array('SORT' => 'ASC'),
 		'select'    => array(),
 		'reload'    => false
-		//'elements'  => array()
     );
 
 	/**
@@ -105,7 +104,7 @@ abstract class Core
      * @return array
      * @author Pavel Shulaev (https://rover-it.me)
      */
-	protected static function getStartResult($empty)
+	public static function getEmptyResult($empty = null)
     {
         return is_null($empty) ? array() : array(0 => $empty);
     }
@@ -123,7 +122,7 @@ abstract class Core
 		$params = self::prepareParams($params);
 		if (!isset($params['class'])
             || !isset($params['method']))
-		    return self::getStartResult($params['empty']);
+		    return self::getEmptyResult($params['empty']);
 
 		$cacheKey = Cache::getKey(serialize($params));
 
@@ -133,7 +132,7 @@ abstract class Core
 			$method = $params['method'];
 
 			if (!method_exists($class, $method))
-				return self::getStartResult($params['empty']);
+				return self::getEmptyResult($params['empty']);
 
 			$query = array(
 				'filter'    => $params['filter'],
@@ -204,7 +203,7 @@ abstract class Core
 		$nameMask   = self::getMask($nameTemplate);
 		$keyMask    = self::getMask($keyTemplate);
 
-        $result = self::getStartResult($empty);
+        $result = self::getEmptyResult($empty);
 
 		foreach ($elements as $element)
 		{
@@ -279,14 +278,13 @@ abstract class Core
 
     /**
      * @param array $params
-     * @return array|null
-     * @throws ArgumentOutOfRangeException
+     * @return array
      * @author Pavel Shulaev (https://rover-it.me)
      */
 	protected static function prepareEmpty(array $params = array())
 	{
-		$params['elements'] = array();
+        $params = self::prepareParams($params);
 
-		return self::prepare($params);
+		return self::getEmptyResult($params['empty']);
 	}
 }
