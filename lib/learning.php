@@ -51,4 +51,32 @@ class Learning extends Core
 
         return Cache::get($cacheKey);
 	}
+
+    /**
+     * @param array $params
+     * @return null
+     * @throws \Bitrix\Main\LoaderException
+     * @throws \Bitrix\Main\SystemException
+     * @author Pavel Shulaev (https://rover-it.me)
+     */
+	public static function getCourses(array $params = array())
+	{
+		self::checkModule();
+
+        if (empty($params['order']))
+            $params['order'] = array('ID' => 'ASC');
+
+        $params     = self::prepareParams($params);
+        $cacheKey   = Cache::getKey(__METHOD__, serialize($params));
+
+        if((false === (Cache::check($cacheKey))) || $params['reload']) {
+
+            $groups = \CCourse::GetList($params['order'], $params['filter']);
+            $result = self::prepareDBResult($groups, $params['template'], $params['empty']);
+
+            Cache::set($cacheKey, $result);
+        }
+
+        return Cache::get($cacheKey);
+	}
 }
