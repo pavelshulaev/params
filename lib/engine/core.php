@@ -106,7 +106,7 @@ abstract class Core
      */
 	public static function getEmptyResult($empty = null)
     {
-        return is_null($empty) ? array() : array(0 => $empty);
+        return is_null($empty) ? array() : array('' => $empty);
     }
 
     /**
